@@ -1,0 +1,12 @@
+
+  <div class="book-card">
+    <h2>{{ book.title }}</h2>
+      {% if book.subtitle %}<h3>{{ book.subtitle }}</h3>{% endif %}
+    <p><strong>Authors:</strong> {{ book.authors }}</p>
+    <p><strong>Published:</strong> {{ book.published_year }}</p>
+    <p><strong>Rating:</strong> {{ book.average_rating|floatformat:1 }}/5.0</p>
+    <p><strong>ISBN-13:</strong> {{ book.isbn13 }}</p>
+      <p><strong>ISBN-10:</strong> {{ book.isbn1 }}</p>
+      <p><strong>Categories:</strong> {{ book.categories }}</p>
+      <p><strong>Description:</strong> {{ book.description }}</p>
+  </div>

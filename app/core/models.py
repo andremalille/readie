@@ -47,11 +47,11 @@ class Book(models.Model):
     isbn10 = models.CharField(max_length=10)
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255, blank=True)
-    authors = models.CharField(max_length=255)
+    authors = models.CharField(max_length=255, blank=True)
     categories = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    published_year = models.IntegerField()
-    average_rating = models.DecimalField(max_digits=2, decimal_places=2)
+    published_year = models.IntegerField(blank=True)
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2)
 
     def __str__(self):
         return self.title
