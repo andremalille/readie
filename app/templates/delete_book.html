@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>Delete a Book</title>
+</head>
+<body>
+    <h2>Remove «{{ book.book }}» from your list?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+        <a href="{% url 'user_list' %}">Cancel</a>
+    </form>
+</body>
+</html>

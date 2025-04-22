@@ -4,6 +4,7 @@ from .forms import (
     UserRegistrationForm,
     UserLoginForm,
     UserChangeInfoForm,
+    UserNameForm,
 )
 
 
@@ -15,10 +16,25 @@ def register_view(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             login(request, user)
-            return redirect('books')
+            return redirect('name')
     else:
         form = UserRegistrationForm()
     return render(request, 'register.html', {'form': form})
+
+
+def user_name_view(request):
+    user = request.user
+    if request.method == 'POST':
+        form = UserNameForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            user.name = name
+            user.save()
+            login(request, user)
+            return redirect('books')
+    else:
+        form = UserNameForm()
+    return render(request, 'user_name.html', {'form': form})
 
 
 def login_view(request):

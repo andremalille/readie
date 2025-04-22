@@ -1,6 +1,6 @@
 
   <div class="book-card">
-    <h2>{{ book.title }}</h2>
+    <h2>{{ book.title }} | {{ book_list.get_category_display }}</h2>
       {% if book.subtitle %}<h3>{{ book.subtitle }}</h3>{% endif %}
     <p><strong>Authors:</strong> {{ book.authors }}</p>
     <p><strong>Published:</strong> {{ book.published_year }}</p>
@@ -10,4 +10,5 @@
       <p><strong>Categories:</strong> {{ book.categories }}</p>
       <p><strong>Description:</strong> {{ book.description }}</p>
   </div>
-  <a href="{% url 'add_book' pk=book.pk %}" class="btn">Add this book to your list</a>
+  <a href="{% url 'edit_book' book_list.pk%}" class="btn">Change Book Status</a>
+  <a href="{% url 'delete_book' book_list.pk%}" class="btn">Remove from List</a>

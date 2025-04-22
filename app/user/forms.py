@@ -9,7 +9,7 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'name', 'password', 'confirm_password')
+        fields = ('email', 'password', 'confirm_password')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -20,6 +20,12 @@ class UserRegistrationForm(forms.ModelForm):
             self.add_error('confirm_password', "Passwords do not match.")
 
         return cleaned_data
+
+
+class UserNameForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('name',)
 
 
 class UserLoginForm(forms.Form):
@@ -57,7 +63,13 @@ class UserChangeInfoForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'name', 'old_password', 'new_password', 'confirm_new_password')
+        fields = (
+            'email',
+            'name',
+            'old_password',
+            'new_password',
+            'confirm_new_password'
+        )
 
     def clean(self):
         cleaned_data = super().clean()
