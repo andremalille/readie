@@ -50,8 +50,10 @@ class Book(models.Model):
     authors = models.CharField(max_length=255, blank=True)
     categories = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    published_year = models.IntegerField(blank=True)
+    published_year = models.IntegerField(null=True, blank=True)
     average_rating = models.DecimalField(max_digits=3, decimal_places=2)
+    thumbnail = models.CharField(max_length=255, blank=True)
+    num_pages = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.title

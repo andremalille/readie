@@ -29,6 +29,13 @@ class Command(BaseCommand):
                         except (ValueError, TypeError):
                             pass
 
+                    num_pages = None
+                    if row.get('num_pages'):
+                        try:
+                            num_pages = int(float(row['num_pages']))
+                        except (ValueError, TypeError):
+                            pass
+
                     Book.objects.create(
                         isbn13=row.get('isbn13', '')[:13],
                         isbn10=row.get('isbn10', '')[:10],
@@ -38,7 +45,9 @@ class Command(BaseCommand):
                         categories=row.get('categories', '')[:255],
                         description=row.get('description', ''),
                         published_year=published_year,
-                        average_rating=average_rating
+                        average_rating=average_rating,
+                        thumbnail=row.get('thumbnail', '')[:255],
+                        num_pages=num_pages,
                     )
 
                     if i % 100 == 0:
