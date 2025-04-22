@@ -55,7 +55,8 @@ class Command(BaseCommand):
 
                 except Exception as e:
                     self.stdout.write(self.style.ERROR(
-                        f"Error importing row {i} ({row.get('title')}): {str(e)}"
+                        f"Error importing row {i}"
+                        f" ({row.get('title')}): {str(e)}"
                     ))
                     continue
 
