@@ -1,17 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     {% load static %}
-    <title>What's your name?</title>
+    {% load form_tags %}
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How can we address you?</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 </head>
+
 <body>
-    <h2>How do we address you?</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-    <hr>
+<main class="enter-name-page">
+    <header class="login-header">
+        <h2 class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Readie logo" class="logo-img"/>
+        </h2>
+    </header>
+
+    <div class="name-content">
+
+        <h2 class="welcome-text white-text">How can we address you?</h2>
+        <form class="name-form" method="post">
+            {% csrf_token %}
+            <div class="name-input-group">
+
+                <div class="name-input-field">
+                    <label for="id_name" class="visually-hidden">Enter your name</label>
+                    <input id="id_name" name="name" type="text" class="input" placeholder="Enter your name" required/>
+                    {% if form.name.errors %}
+                    <div class="errorlist">
+                        {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="start-button">
+                    Let's start
+                    <img class="arrow-right" src="{% static 'images/arrow_right.png' %}" alt="arrow">
+                </button>
+
+            </div>
+        </form>
+    </div>
+</main>
 </body>
 </html>

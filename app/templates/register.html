@@ -1,17 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     {% load static %}
-    <title>Register</title>
+    {% load form_tags %}
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Readie - Sign Up</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 </head>
 <body>
-    <h2>Register</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-    <hr>
-    <a href="{% url 'login' %}" class="btn">Login</a>
+<main class="log-in-page">
+    <div class="overlap"></div>
+    <div class="login-container">
+        <header class="login-header">
+            <h2 class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="Readie logo" class="logo-img"/>
+            </h2>
+        </header>
+        <div class="right-side-content">
+            <section class="login-content">
+                <h2 class="welcome-text">Sign Up</h2>
+                <form class="login-form" data-color-mode="SDS-light" method="post" action="{% url 'register' %}">
+                    {% csrf_token %}
+
+                    <div class="input-field">
+                        <label for="id_email" class="label">Email</label>
+                        <input type="email" name="email" id="id_email" class="input" placeholder="Enter your email"
+                               required/>
+                        {% if form.email.errors %}
+                        <div class="errorlist">
+                            {% for error in form.email.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field">
+                        <label for="id_password" class="label">Password</label>
+                        <input type="password" name="password" id="id_password" class="input"
+                               placeholder="Enter your password" required/>
+                        {% if form.password.errors %}
+                        <div class="errorlist">
+                            {% for error in form.password.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div id="confirm-password-field" class="input-field {% if form.data.password %}visible{% endif %}">
+                        <label for="id_confirm_password" class="label">Confirm Password</label>
+                        <input type="password" name="confirm_password" id="id_confirm_password" class="input"
+                               placeholder="Confirm your password" {% if form.data.password %}required{% endif %}/>
+                        {% if form.confirm_password.errors %}
+                        <div class="errorlist">
+                            {% for error in form.confirm_password.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if form.non_field_errors %}
+                    <div class="error-message">
+                        {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="button-group">
+                        <button type="submit" class="login-button">Sign Up</button>
+                    </div>
+
+                    <a href="{% url 'login' %}" class="forgot-password">Already have an account? Log in</a>
+                </form>
+
+                <footer class="social-follow">
+                    <p class="follow-text">Follow</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon" aria-label="Instagram">
+                            <img src="{% static 'images/instagram_logo.png' %}" alt="Instagram" class="social-logo">
+                        </a>
+                        <a href="#" class="social-icon" aria-label="Telegram">
+                            <img src="{% static 'images/telegram_logo.png' %}" alt="Telegram" class="social-logo">
+                        </a>
+                    </div>
+                </footer>
+            </section>
+        </div>
+    </div>
+</main>
+<script>
+    const passwordField = document.getElementById('id_password');
+    const confirmPasswordField = document.getElementById('confirm-password-field');
+    const confirmPasswordInput = document.getElementById('id_confirm_password');
+
+    passwordField.addEventListener('input', function () {
+        if (this.value.length > 0) {
+            confirmPasswordField.classList.add('visible');
+            confirmPasswordInput.setAttribute('required', 'required');
+        } else {
+            confirmPasswordField.classList.remove('visible');
+            confirmPasswordInput.removeAttribute('required');
+        }
+    });
+</script>
 </body>
 </html>
