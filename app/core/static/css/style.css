@@ -105,7 +105,7 @@ textarea:focus {
 }
 
 .login-header {
-    position: relative;
+    position: absolute;
     top: 62px;
     left: 44px;
     z-index: 1;
@@ -407,18 +407,6 @@ textarea:focus {
 }
 
 @media (max-width: 1200px) {
-
-    .burger-menu-container {
-        top: 20px;
-        left: 20px;
-        width: 24px;
-        height: 24px;
-    }
-
-    .burger-menu {
-        width: 100%;
-        height: 100%;
-    }
 
     .login-container {
         width: 100%;
