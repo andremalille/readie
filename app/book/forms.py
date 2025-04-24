@@ -12,3 +12,7 @@ class BookForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if book_instance:
             self.instance.book = book_instance
+
+
+class BookSearchForm(forms.Form):
+    q = forms.CharField(label='Search', required=False)

@@ -4,6 +4,10 @@
 <h1>Book Collection</h1>
 
 <div class="book-list">
+  <form method="get">
+    {{ form.q }}
+    <button type="submit">Search</button>
+</form>
   {% for book in page_obj %}
   <div class="book-card">
     <a href="{% url 'book_info' pk=book.pk %}"><h2>{{ book.title }}</h2></a>

@@ -2,17 +2,24 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required # noqa
 from core.models import Book, BookList
 from django.core.paginator import Paginator
-from book.forms import BookForm
+from book.forms import BookForm, BookSearchForm
+from django.db.models import Q
 
 
 def books_view(request):
-    books_list = Book.objects.all().order_by('title')
+    form = BookSearchForm(request.GET)
+    books_list = Book.objects.all()
 
-    paginator = Paginator(books_list, 100)
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            books_list = books_list.filter(Q(title__icontains=query))
+
+    paginator = Paginator(books_list.order_by('title'), 100)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'page_obj': page_obj}
+    context = {'page_obj': page_obj, 'form': form}
     return render(request, 'book_list.html', context)
 
 
@@ -40,13 +47,19 @@ def book_add_to_list(request, pk):
 
 
 def book_user_list(request):
-    books_list = BookList.objects.filter(user=request.user).order_by('book')
+    form = BookSearchForm(request.GET)
+    books_list = BookList.objects.filter(user=request.user)
 
-    paginator = Paginator(books_list, 100)
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            books_list = books_list.filter(Q(book__title__icontains=query))
+
+    paginator = Paginator(books_list.order_by('book'), 100)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'page_obj': page_obj}
+    context = {'page_obj': page_obj, 'form': form}
     return render(request, 'user_list.html', context)
 
 
