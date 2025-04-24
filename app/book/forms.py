@@ -15,4 +15,4 @@ class BookForm(forms.ModelForm):
 
 
 class BookSearchForm(forms.Form):
-    q = forms.CharField(label='Search', required=False)
+    q = forms.CharField(label='Search', required=True)
