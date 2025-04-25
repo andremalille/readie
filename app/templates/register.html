@@ -45,7 +45,7 @@
                             {% endfor %} </div>
                     </div>
 
-                    <div class="input-field confirm-password-field confirm-password-field-{% if form.data.password %}visible{% endif %}">
+                    <div class="input-field">
                         <label for="id_confirm_password" class="label">Confirm Password</label>
                         <input type="password" name="confirm_password" id="id_confirm_password" class="input"
                                placeholder="Confirm your password" {% if form.data.password %}required{% endif %}/>
