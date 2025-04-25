@@ -109,6 +109,7 @@ textarea:focus {
     top: 62px;
     left: 44px;
     z-index: 1;
+    width: 100%;
 }
 
 .logo {
@@ -117,14 +118,14 @@ textarea:focus {
     font-size: 30px;
     text-align: center;
     line-height: 1;
+    margin-top: -40px;
+    margin-left: -30px;
 }
 
 .logo-img {
     max-width: 150px;
     height: auto;
     display: block;
-    margin-top: -40px;
-    margin-left: -30px;
 }
 
 .right-side-content {
@@ -167,6 +168,7 @@ textarea:focus {
 }
 
 .label {
+    text-align: left;
     margin-bottom: var(--space-sm);
     color: var(--color-text);
 }
@@ -271,6 +273,7 @@ textarea:focus {
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow-x: hidden;
 }
 
 .enter-name-page .login-header {
@@ -361,6 +364,21 @@ textarea:focus {
     height: 16px;
 }
 
+.burger-menu-container {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    z-index: 100;
+    width: 100px;
+    height: 100px;
+}
+
+.burger-menu {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
 .error-message {
     color: #e74c3c;
     background-color: rgba(231, 76, 60, 0.1);
@@ -391,6 +409,7 @@ textarea:focus {
 }
 
 @media (max-width: 1200px) {
+
     .login-container {
         width: 100%;
         height: auto;
