@@ -20,7 +20,9 @@ def books_view(request):
             for split in category.split(','):
                 unique_categories_list.add(split.strip())
 
-    form.fields['categories'].choices = [(cat, cat) for cat in sorted(unique_categories_list)]
+    form.fields['categories'].choices = [
+        (cat, cat) for cat in sorted(unique_categories_list)
+    ]
 
     if form.is_valid():
         action = request.GET.get('action')
@@ -35,7 +37,7 @@ def books_view(request):
                     Q(isbn13__icontains=query)
                 )
 
-        if action == 'filter':
+        if action == 'filter' or action == 'search':
             selected_categories = form.cleaned_data.get('categories')
             pages_min = form.cleaned_data.get('pages_min')
             pages_max = form.cleaned_data.get('pages_max')
@@ -99,9 +101,21 @@ def book_user_list(request):
     books_list = BookList.objects.filter(user=request.user)
 
     if form.is_valid():
-        query = form.cleaned_data.get('q')
-        if query:
-            books_list = books_list.filter(Q(book__title__icontains=query))
+        action = request.GET.get('action')
+        if action == 'search':
+            query = form.cleaned_data.get('q')
+            if query:
+                books_list = books_list.filter(
+                    Q(book__title__icontains=query) |
+                    Q(book__authors__icontains=query) |
+                    Q(book__isbn10__icontains=query) |
+                    Q(book__isbn13__icontains=query)
+                )
+
+        if action == 'filter' or action == 'search':
+            selected_statuses = form.cleaned_data.get('statuses')
+            if selected_statuses:
+                books_list = books_list.filter(status__in=selected_statuses)
 
     paginator = Paginator(books_list.order_by('book'), 100)
     page_number = request.GET.get('page')

@@ -45,7 +45,7 @@
                             {% endfor %} </div>
                     </div>
 
-                    <div class="input-field">
+                    <div class="input-field" id="confirm-password-container" style="display: none;">
                         <label for="id_confirm_password" class="label">Confirm Password</label>
                         <input type="password" name="confirm_password" id="id_confirm_password" class="input"
                                placeholder="Confirm your password" {% if form.data.password %}required{% endif %}/>
@@ -84,3 +84,15 @@
     </div>
 </body>
 </html>
+<script>
+    const passwordInput = document.getElementById('id_password');
+    const confirmPasswordContainer = document.getElementById('confirm-password-container');
+
+    passwordInput.addEventListener('input', function () {
+        if (this.value.length > 0) {
+            confirmPasswordContainer.style.display = 'block';
+        } else {
+            confirmPasswordContainer.style.display = 'none';
+        }
+    });
+</script>

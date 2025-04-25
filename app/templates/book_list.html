@@ -10,10 +10,19 @@
       <button type="submit" name="action" value="search">Search</button>
     </div>
 
-    <fieldset>
-        <legend>Categories</legend>
-        {{ form.categories }}
-    </fieldset>
+    <input type="text" id="category-search" placeholder="Filter categories...">
+
+<div id="category-checkboxes">
+  {% for value, label in form.categories.field.choices %}
+    <div class="category-item">
+      <label>
+        <input type="checkbox" name="categories" value="{{ value }}"
+               {% if value in form.categories.value %}checked{% endif %}>
+        {{ label }}
+      </label>
+    </div>
+  {% endfor %}
+</div>
 
     <div>
         <label>{{ form.pages_min.label }}</label> {{ form.pages_min }}
@@ -61,3 +70,16 @@
     {% endif %}
   </span>
 </div>
+
+
+<script>
+  document.getElementById("category-search").addEventListener("input", function () {
+    const filter = this.value.toLowerCase();
+    const items = document.querySelectorAll("#category-checkboxes .category-item");
+
+    items.forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(filter) ? "block" : "none";
+    });
+  });
+</script>
