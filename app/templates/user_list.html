@@ -6,7 +6,21 @@
 <div class="book-list">
   <form method="get">
     {{ form.q }}
-    <button type="submit">Search</button>
+    <button type="submit" name="action" value="search">Search</button>
+
+    <fieldset>
+    <legend>Filter by Status</legend>
+    {% for checkbox in form.statuses %}
+      <div class="checkbox-item">
+        <label>
+          {{ checkbox.tag }}
+          {{ checkbox.choice_label }}
+        </label>
+      </div>
+    {% endfor %}
+    <button type="submit" name="action" value="filter">Apply Filter</button>
+      <a href="{% url 'user_list' %}" class="btn">Clear</a>
+  </fieldset>
 </form>
   {% for book in page_obj %}
   <div class="book-card">

@@ -26,6 +26,11 @@ class BookSearchForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
         choices=[],
     )
+    statuses = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=BookList.STATUS_CHOICES,
+    )
     pages_min = forms.IntegerField(label='Min pages', required=False)
     pages_max = forms.IntegerField(label='Max pages', required=False)
     rating_min = forms.DecimalField(
