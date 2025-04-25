@@ -1,6 +1,6 @@
 
   <div class="book-card">
-    <h2>{{ book.title }} | {{ book_list.get_category_display }}</h2>
+    <h2>{{ book.title }} | {{ book_list.get_status_display }}</h2>
       {% if book.subtitle %}<h3>{{ book.subtitle }}</h3>{% endif %}
     <p><strong>Authors:</strong> {{ book.authors }}</p>
     <p><strong>Published:</strong> {{ book.published_year }}</p>

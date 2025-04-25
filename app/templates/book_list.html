@@ -5,8 +5,33 @@
 
 <div class="book-list">
   <form method="get">
-    {{ form.q }}
-    <button type="submit">Search</button>
+    <div>
+        {{ form.q.label }} {{ form.q }}
+      <button type="submit" name="action" value="search">Search</button>
+    </div>
+
+    <fieldset>
+        <legend>Categories</legend>
+        {{ form.categories }}
+    </fieldset>
+
+    <div>
+        <label>{{ form.pages_min.label }}</label> {{ form.pages_min }}
+        <label>{{ form.pages_max.label }}</label> {{ form.pages_max }}
+    </div>
+
+    <div>
+        <label>{{ form.rating_min.label }}</label> {{ form.rating_min }}
+        <label>{{ form.rating_max.label }}</label> {{ form.rating_max }}
+    </div>
+
+    <div>
+        <label>{{ form.year_min.label }}</label> {{ form.year_min }}
+        <label>{{ form.year_max.label }}</label> {{ form.year_max }}
+    </div>
+
+    <button type="submit" name="action" value="filter">Filter</button>
+      <a href="{% url 'books' %}" class="btn">Clear</a>
 </form>
   {% for book in page_obj %}
   <div class="book-card">

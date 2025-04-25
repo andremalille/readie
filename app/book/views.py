@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required # noqa
 from core.models import Book, BookList
 from django.core.paginator import Paginator
-from book.forms import BookForm, BookSearchForm
+from book.forms import (
+    BookForm,
+    BookSearchForm,
+)
 from django.db.models import Q
 
 
@@ -10,10 +13,55 @@ def books_view(request):
     form = BookSearchForm(request.GET)
     books_list = Book.objects.all()
 
+    categories = Book.objects.values_list('categories', flat=True)
+    unique_categories_list = set()
+    for category in categories:
+        if category:
+            for split in category.split(','):
+                unique_categories_list.add(split.strip())
+
+    form.fields['categories'].choices = [(cat, cat) for cat in sorted(unique_categories_list)]
+
     if form.is_valid():
+        action = request.GET.get('action')
         query = form.cleaned_data.get('q')
-        if query:
-            books_list = books_list.filter(Q(title__icontains=query))
+
+        if action == 'search':
+            if query:
+                books_list = books_list.filter(
+                    Q(title__icontains=query) |
+                    Q(authors__icontains=query) |
+                    Q(isbn10__icontains=query) |
+                    Q(isbn13__icontains=query)
+                )
+
+        if action == 'filter':
+            selected_categories = form.cleaned_data.get('categories')
+            pages_min = form.cleaned_data.get('pages_min')
+            pages_max = form.cleaned_data.get('pages_max')
+            rating_min = form.cleaned_data.get('rating_min')
+            rating_max = form.cleaned_data.get('rating_max')
+            year_min = form.cleaned_data.get('year_min')
+            year_max = form.cleaned_data.get('year_max')
+
+            if selected_categories:
+                for category in selected_categories:
+                    books_list = books_list.filter(categories__icontains=category)
+
+            if pages_min is not None:
+                books_list = books_list.filter(num_pages__gte=pages_min)
+            if pages_max is not None:
+                books_list = books_list.filter(num_pages__lte=pages_max)
+
+            if rating_min is not None:
+                books_list = books_list.filter(average_rating__gte=rating_min)
+            if rating_max is not None:
+                books_list = books_list.filter(average_rating__lte=rating_max)
+
+            if year_min is not None:
+                books_list = books_list.filter(published_year__gte=year_min)
+            if year_max is not None:
+                books_list = books_list.filter(published_year__lte=year_max)
 
     paginator = Paginator(books_list.order_by('title'), 100)
     page_number = request.GET.get('page')
