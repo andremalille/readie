@@ -35,7 +35,7 @@ body {
 }
 
 .left-side {
-    flex: 2;
+    flex: 1.5;
     background-image: url("../images/books.jpg");
     background-repeat: no-repeat;
     background-size: cover;
