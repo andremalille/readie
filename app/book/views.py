@@ -76,7 +76,12 @@ def books_view(request):
 def book_info(request, pk):
     book = Book.objects.get(pk=pk)
 
-    context = {'book': book}
+    if request.method == 'POST':
+        form = BookForm(request.POST, book_instance=book)
+    else:
+        form = BookForm(book_instance=book)
+
+    context = {'book': book, 'form': form}
     return render(request, 'book_info.html', context)
 
 
@@ -129,7 +134,9 @@ def user_book_info(request, pk):
     book_list_instance = BookList.objects.get(pk=pk)
     book = book_list_instance.book
 
-    context = {'book': book, 'book_list': book_list_instance}
+    form = BookForm(request.POST, instance=book)
+
+    context = {'book': book, 'book_list': book_list_instance, 'form': form}
     return render(request, 'user_book_info.html', context)
 
 
@@ -139,7 +146,7 @@ def edit_book_view(request, pk):
         form = BookForm(request.POST, instance=book_instance)
         if form.is_valid():
             form.save()
-            return redirect('user_list')
+            return redirect('user_book_info', pk=pk)
     else:
         form = BookForm(instance=book_instance)
     context = {'form': form, 'book': book_instance}
