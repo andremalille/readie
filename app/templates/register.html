@@ -6,7 +6,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="{% static 'css/reset.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/login_register.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/login-register.css' %}" />
     <title>Readie - Sign Up</title>
 </head>
 <body>
@@ -20,7 +20,7 @@
         <div class="right-side">
             <div class="form-container">
                 <h1>Sign Up</h1>
-                <form class="form" method="post" action="{% url 'login' %}">
+                <form class="form" method="post" action="{% url 'register' %}">
                     {% csrf_token %}
 
                     <div class="input-field">
@@ -45,7 +45,7 @@
                             {% endfor %} </div>
                     </div>
 
-                    <div class="input-field" id="confirm-password-container" style="display: none;">
+                    <div class="input-field" id="confirm-password-container">
                         <label for="id_confirm_password" class="label">Confirm Password</label>
                         <input type="password" name="confirm_password" id="id_confirm_password" class="input"
                                placeholder="Confirm your password" {% if form.data.password %}required{% endif %}/>
@@ -60,7 +60,7 @@
 
 
                     {% if form.non_field_errors %}
-                    <div class="error-message error"> 
+                    <div class="error-message error">
                         {% for error in form.non_field_errors %}
                         {{ error }}
                         {% endfor %}
@@ -90,9 +90,9 @@
 
     passwordInput.addEventListener('input', function () {
         if (this.value.length > 0) {
-            confirmPasswordContainer.style.display = 'block';
+            confirmPasswordContainer.classList.add('show');
         } else {
-            confirmPasswordContainer.style.display = 'none';
+            confirmPasswordContainer.classList.remove('show');
         }
     });
 </script>
