@@ -64,6 +64,17 @@ def profile_view(request):
     return render(request, 'profile.html', context)
 
 
+def change_profile_image(request):
+    if request.method == 'POST':
+        if request.FILES.get('image'):
+            request.user.image = request.FILES['image']
+            request.user.save()
+            print(f"Image saved: {request.user.image.url}")
+        else:
+            print("No image in request.FILES")
+    return redirect('profile')
+
+
 def change_info_view(request):
     if request.method == 'POST':
         form = UserChangeInfoForm(request.POST, instance=request.user)

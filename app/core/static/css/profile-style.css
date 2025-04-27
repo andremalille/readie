@@ -65,32 +65,52 @@
 }
 
 .profile-image-container {
+    /*position: relative;*/
+    /*width: 300px;*/
+    /*height: 300px;*/
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
-    width: 300px;
-    height: 300px;
+    margin: 0 auto;
 }
 
 .user-avatar {
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*border-radius: 50%;*/
+    /*object-fit: cover;*/
     width: 100%;
     height: 100%;
-    border-radius: 50%;
     object-fit: cover;
 }
 
 .avatar-placeholder {
-    position: absolute;
-    top: 0;
-    left: 0;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*border-radius: 50%;*/
+    /*background-color: var(--color-primary);*/
+    /*color: var(--color-white);*/
+    /*display: none;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*font-size: 80px;*/
+    /*font-weight: 500;*/
     width: 100%;
     height: 100%;
-    border-radius: 50%;
-    background-color: var(--color-primary);
-    color: var(--color-white);
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 80px;
-    font-weight: 500;
+    background-color: #e0e0e0;
+    font-size: 3rem;
+    color: #555;
 }
 
 .profile-name {
