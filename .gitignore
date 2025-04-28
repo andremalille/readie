@@ -173,3 +173,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 /app/core/static/css/test.css
+/app/core/static/css/style.css
+
