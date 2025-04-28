@@ -10,5 +10,9 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile_view, name='profile'),
     path('change-info/', views.change_info_view, name='change_info'),
-    path('profile/change-image/', views.change_profile_image, name='change_profile_image'),
+    path(
+        'profile/change-image/',
+        views.change_profile_image,
+        name='change_profile_image'
+    ),
 ]

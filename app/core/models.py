@@ -77,7 +77,8 @@ class BookList(models.Model):
         ('read_later', 'Read later'),
         ('currently_reading', 'Currently reading'),
         ('finished', 'Finished'),
-        ('favourites', 'Favourites'),
+        ('on_hold', 'On hold'),
+        ('re_reading', 'Re-reading'),
         ('dropped_reading', 'Dropped reading'),
     ]
 
@@ -87,6 +88,8 @@ class BookList(models.Model):
         on_delete=models.CASCADE,
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    favourites = models.BooleanField(default=False)
+    pages_read = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
         return f"{self.book} | {self.user}"

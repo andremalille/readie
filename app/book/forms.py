@@ -5,13 +5,28 @@ from core.models import BookList
 class BookForm(forms.ModelForm):
     class Meta:
         model = BookList
-        fields = ('status',)
+        fields = ('status', 'favourites', 'pages_read')
 
     def __init__(self, *args, **kwargs):
         book_instance = kwargs.pop('book_instance', None)
         super().__init__(*args, **kwargs)
         if book_instance:
             self.instance.book = book_instance
+
+    def clean_pages_read(self):
+        pages_read = self.cleaned_data.get('pages_read')
+        num_pages = self.instance.book.num_pages
+        if pages_read is not None and num_pages is not None:
+            if pages_read > num_pages:
+                raise forms.ValidationError(
+                    f"You cannot read more pages ({pages_read}) than the book has ({num_pages})."
+                )
+            if pages_read < 0:
+                raise forms.ValidationError(
+                    "You entered an invalid pages read value."
+                )
+
+        return pages_read
 
 
 class BookSearchForm(forms.Form):

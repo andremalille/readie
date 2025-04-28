@@ -2,7 +2,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <div class="book-card">
-    <h2>{{ book.title }} | {{ book_list.get_status_display }}</h2>
+    <h2>{{ book.title }} | {{ book_list.get_status_display }} | {{ book_list.pages_read }} </h2>
       {% if book.subtitle %}<h3>{{ book.subtitle }}</h3>{% endif %}
     <p><strong>Authors:</strong> {{ book.authors }}</p>
     <p><strong>Published:</strong> {{ book.published_year }}</p>
@@ -15,13 +15,30 @@
   <a href="{% url 'edit_book' book_list.pk%}" class="btn">Change Book Status</a>
   <a href="{% url 'delete_book' book_list.pk%}" class="btn">Remove from List</a>
 
-<!-- Edit Button triggers Modal -->
-<button class="btn" data-bs-toggle="modal" data-bs-target="#editModal{{ book_list.pk }}">Change Book Status</button>
+<div class="action-buttons">
+  <!-- Favourite toggle button -->
+  <button class="btn {% if book_list.favourites %}btn-warning{% else %}btn-outline-warning{% endif %}"
+          data-bs-toggle="modal" data-bs-target="#favouriteModal{{ book_list.pk }}">
+    <i class="fas fa-star"></i> {% if book_list.favourites %}Remove from favourites{% else %}Add to favourites{% endif %}
+  </button>
 
-<!-- Delete Button triggers Modal -->
-<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ book_list.pk }}">Remove from List</button>
+  <!-- Status button -->
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ book_list.pk }}">
+    Change Book Status
+  </button>
 
-<!-- Edit Modal -->
+  <!-- Pages read button -->
+  <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editPagesModal{{ book_list.pk }}">
+    Change pages read
+  </button>
+
+  <!-- Delete button -->
+  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ book_list.pk }}">
+    Remove from List
+  </button>
+</div>
+
+<!-- Edit Status Modal -->
 <div class="modal fade" id="editModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <form method="post" action="{% url 'edit_book' book_list.pk %}">
@@ -32,10 +49,68 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          {{ form.as_p }}
+          <select name="status" class="form-select">
+            {% for value, text in form.fields.status.choices %}
+              <option value="{{ value }}" {% if book_list.status == value %}selected{% endif %}>{{ text }}</option>
+            {% endfor %}
+          </select>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Pages Modal -->
+<div class="modal fade" id="editPagesModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'edit_book' book_list.pk %}">
+      {% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Pages</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="number" name="pages_read" class="form-control" value="{{ book_list.pages_read|default_if_none:'' }}"
+                 {% if book.num_pages %}max="{{ book.num_pages }}"{% endif %} min="0">
+          {% if book.num_pages %}
+            <small class="text-muted">Book has {{ book.num_pages }} pages total</small>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Favourite Toggle Modal -->
+<div class="modal fade" id="favouriteModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'edit_book' book_list.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="toggle_favourite" value="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {% if book_list.favourites %}Remove from Favourites{% else %}Add to Favourites{% endif %}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to {% if book_list.favourites %}remove{% else %}add{% endif %}
+          <strong>"{{ book.title }}"</strong> {% if book_list.favourites %}from{% else %}to{% endif %} your favourites?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn {% if book_list.favourites %}btn-warning{% else %}btn-outline-warning{% endif %}">
+            {% if book_list.favourites %}Remove from favourites{% else %}Add to favourites{% endif %}
+          </button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -54,7 +129,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          Are you sure you want to remove <strong>«{{ book.title }}»</strong> from your list?
+          Are you sure you want to remove <strong>"{{ book.title }}"</strong> from your list?
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-danger">Yes, Delete</button>

@@ -21,6 +21,8 @@
     <button type="submit" name="action" value="filter">Apply Filter</button>
       <a href="{% url 'user_list' %}" class="btn">Clear</a>
   </fieldset>
+    <button type="submit" name="action" value="favourites">Show Favourites</button>
+
 </form>
   {% for book in page_obj %}
   <div class="book-card">

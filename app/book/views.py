@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required # noqa
 from core.models import Book, BookList
@@ -122,6 +123,10 @@ def book_user_list(request):
             if selected_statuses:
                 books_list = books_list.filter(status__in=selected_statuses)
 
+        show_favourites = request.GET.get('favourites')
+        if show_favourites == 'true' or action == 'favourites':
+            books_list = books_list.filter(favourites=True)
+
     paginator = Paginator(books_list.order_by('book'), 100)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -134,7 +139,7 @@ def user_book_info(request, pk):
     book_list_instance = BookList.objects.get(pk=pk)
     book = book_list_instance.book
 
-    form = BookForm(request.POST, instance=book)
+    form = BookForm(instance=book_list_instance)
 
     context = {'book': book, 'book_list': book_list_instance, 'form': form}
     return render(request, 'user_book_info.html', context)
@@ -143,14 +148,37 @@ def user_book_info(request, pk):
 def edit_book_view(request, pk):
     book_instance = BookList.objects.get(pk=pk, user=request.user)
     if request.method == 'POST':
-        form = BookForm(request.POST, instance=book_instance)
-        if form.is_valid():
-            form.save()
-            return redirect('user_book_info', pk=pk)
+        if 'status' in request.POST:
+            book_instance.status = request.POST['status']
+            book_instance.save()
+
+        elif 'pages_read' in request.POST:
+            pages_read = request.POST['pages_read']
+            if pages_read and book_instance.book.num_pages:
+                if int(pages_read) > book_instance.book.num_pages:
+                    messages.error(
+                        request,
+                        f"You cannot read more pages than the book has "
+                        f"({book_instance.book.num_pages})."
+                    )
+                    return redirect('user_book_info', pk=pk)
+                if int(pages_read) < 0:
+                    messages.error(
+                        request,
+                        "You entered an invalid pages read value."
+                    )
+                    return redirect('user_book_info', pk=pk)
+            book_instance.pages_read = pages_read
+            book_instance.save()
+
+        elif 'toggle_favourite' in request.POST:
+            book_instance.favourites = not book_instance.favourites
+            book_instance.save()
+
+        return redirect('user_book_info', pk=pk)
     else:
         form = BookForm(instance=book_instance)
     context = {'form': form, 'book': book_instance}
-
     return render(request, 'edit_book.html', context)
 
 
