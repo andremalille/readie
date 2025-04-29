@@ -19,7 +19,8 @@ class BookForm(forms.ModelForm):
         if pages_read is not None and num_pages is not None:
             if pages_read > num_pages:
                 raise forms.ValidationError(
-                    f"You cannot read more pages ({pages_read}) than the book has ({num_pages})."
+                    f"You cannot read more pages "
+                    f"({pages_read}) than the book has ({num_pages})."
                 )
             if pages_read < 0:
                 raise forms.ValidationError(

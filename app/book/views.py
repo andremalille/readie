@@ -146,40 +146,39 @@ def user_book_info(request, pk):
 
 
 def edit_book_view(request, pk):
-    book_instance = BookList.objects.get(pk=pk, user=request.user)
+    book_list = BookList.objects.get(pk=pk, user=request.user)
+    book = book_list.book
+
     if request.method == 'POST':
-        if 'status' in request.POST:
-            book_instance.status = request.POST['status']
-            book_instance.save()
+        action_type = request.POST.get('action_type')
 
-        elif 'pages_read' in request.POST:
-            pages_read = request.POST['pages_read']
-            if pages_read and book_instance.book.num_pages:
-                if int(pages_read) > book_instance.book.num_pages:
-                    messages.error(
-                        request,
-                        f"You cannot read more pages than the book has "
-                        f"({book_instance.book.num_pages})."
-                    )
-                    return redirect('user_book_info', pk=pk)
-                if int(pages_read) < 0:
-                    messages.error(
-                        request,
-                        "You entered an invalid pages read value."
-                    )
-                    return redirect('user_book_info', pk=pk)
-            book_instance.pages_read = pages_read
-            book_instance.save()
+        if action_type == 'toggle_favourite':
+            book_list.favourites = not book_list.favourites
+            book_list.save()
+            return redirect('user_book_info', pk=pk)
 
-        elif 'toggle_favourite' in request.POST:
-            book_instance.favourites = not book_instance.favourites
-            book_instance.save()
+        form = BookForm(request.POST, instance=book_list)
 
-        return redirect('user_book_info', pk=pk)
+        if action_type == 'change_status':
+            if form.is_valid():
+                book_list.status = form.cleaned_data['status']
+                book_list.save()
+                return redirect('user_book_info', pk=pk)
+
+        elif action_type == 'change_pages':
+            if form.is_valid():
+                book_list.pages_read = form.cleaned_data['pages_read']
+                book_list.save()
+                return redirect('user_book_info', pk=pk)
     else:
-        form = BookForm(instance=book_instance)
-    context = {'form': form, 'book': book_instance}
-    return render(request, 'edit_book.html', context)
+        form = BookForm(instance=book_list)
+
+    context = {
+        'form': form,
+        'book_list': book_list,
+        'book': book,
+    }
+    return render(request, 'user_book_info.html', context)
 
 
 def delete_book(request, pk):
