@@ -1,3 +1,5 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+
 :root {
     --color-primary: #2c2c2c;
     --color-primary-hover: #1e1e1e;
@@ -6,15 +8,13 @@
     --color-background: #f2f0ef;
     --color-white: #ffffff;
     --color-border: #d9d9d9;
-
+    --color-error: rgb(175, 5, 1);
     --space-sm: 8px;
     --space-md: 12px;
     --space-lg: 16px;
     --space-xl: 24px;
-
     --radius: 8px;
     --radius-pill: 30px;
-
     --font-family: "Inter", Helvetica, sans-serif;
     --font-size: 18px;
     --line-height: 1.4;
@@ -116,27 +116,39 @@ h1 {
     color: var(--color-text-light);
 }
 
-.input:focus{
-    border: solid rgb(40, 126, 218) 1px;
+.input:focus {
+    border: 1px solid rgb(40, 126, 218);
+    outline: none;
+    -webkit-box-shadow: 0 0 3px rgb(40, 126, 218);
+    box-shadow: 0 0 3px rgb(40, 126, 218);
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .error {
-    color: rgb(175, 5, 1);
+    color: var(--color-error);
     margin-top: 5px;
+    font-size: 14px;
 }
 
 #confirm-password-container {
     max-height: 0;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
     opacity: 0;
     transform: translateY(20px);
     transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1;
 }
 
 #confirm-password-container.show {
     max-height: 200px;
     opacity: 1;
     transform: translateY(0);
+}
+
+.password-mismatch-error {
+    font-weight: 500;
 }
 
 .form-button {
@@ -152,8 +164,23 @@ h1 {
     height: 50px;
 }
 
-.form-button:hover {
+.form-button:hover:not(:disabled) {
     background-color: var(--color-primary-hover);
+}
+
+.form-button:disabled, .button-disabled {
+    background-color: #6c6c6c;
+    border-color: #6c6c6c;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.form-level-error {
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    background-color: #ffebee;
+    border-left: 3px solid var(--color-error);
+    font-weight: 500;
 }
 
 .form-container .form-link {
