@@ -1,4 +1,4 @@
-from django.contrib import messages
+import re
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required # noqa
 from core.models import Book, BookList
@@ -13,6 +13,7 @@ from django.db.models import Q
 def books_view(request):
     form = BookSearchForm(request.GET)
     books_list = Book.objects.all()
+    sort = False
 
     categories = Book.objects.values_list('categories', flat=True)
     unique_categories_list = set()
@@ -66,11 +67,50 @@ def books_view(request):
             if year_max is not None:
                 books_list = books_list.filter(published_year__lte=year_max)
 
-    paginator = Paginator(books_list.order_by('title'), 100)
+        if action == 'recommend':
+            sort = True
+
+            user_added_books = Book.objects.filter(booklist__user=request.user)
+            books_list = books_list.exclude(pk__in=user_added_books)
+
+            user_favorites = BookList.objects.filter(user=request.user, favourites=True)
+
+            if user_favorites.exists():
+                favorite_books = Book.objects.filter(booklist__in=user_favorites)
+                user_categories = favorite_books.values_list('categories', flat=True)
+
+                user_unique_categories_list = set()
+                for category in user_categories:
+                    if category:
+                        for split in category.split(','):
+                            user_unique_categories_list.add(split.strip())
+
+                if user_unique_categories_list:
+                    category_query = Q()
+                    for category in user_unique_categories_list:
+                        pattern = r'(^|,\s*)' + re.escape(category) + r'(\s*,|$)'
+                        category_query |= Q(categories__regex=pattern)
+
+                    books_list = books_list.filter(category_query)
+
+    if sort:
+        books_list = books_list.order_by('-average_rating')
+    else:
+        books_list = books_list.order_by('title')
+
+    paginator = Paginator(books_list, 100)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'page_obj': page_obj, 'form': form}
+    query_params = request.GET.copy()
+    if 'page' in query_params:
+        del query_params['page']
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'query_params': query_params.urlencode()
+    }
     return render(request, 'book_list.html', context)
 
 
