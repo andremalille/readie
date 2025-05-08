@@ -219,97 +219,97 @@ textarea:focus {
     display: none;
 }
 
-.modal-content {
-    background-color: var(--color-background);
-    border-radius: var(--radius-pill);
-    border: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+/*.modal-content {*/
+/*    background-color: var(--color-background);*/
+/*    border-radius: var(--radius-pill);*/
+/*    border: none;*/
+/*    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/
+/*}*/
 
-.modal-header {
-    border-bottom: 1px solid var(--color-border);
-    padding: 15px var(--space-xl);
-}
+/*.modal-header {*/
+/*    border-bottom: 1px solid var(--color-border);*/
+/*    padding: 15px var(--space-xl);*/
+/*}*/
 
-.modal-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--color-text);
-}
+/*.modal-title {*/
+/*    font-size: 24px;*/
+/*    font-weight: 600;*/
+/*    color: var(--color-text);*/
+/*}*/
 
-.btn-close {
-    color: var(--color-text);
-    opacity: 0.8;
-}
+/*.btn-close {*/
+/*    color: var(--color-text);*/
+/*    opacity: 0.8;*/
+/*}*/
 
-.modal-body {
-    padding: 24px var(--space-xl);
-}
+/*.modal-body {*/
+/*    padding: 24px var(--space-xl);*/
+/*}*/
 
-.form-label {
-    color: var(--color-text);
-    font-size: 18px;
-    margin-bottom: 12px;
-    display: block;
-}
+/*.form-label {*/
+/*    color: var(--color-text);*/
+/*    font-size: 18px;*/
+/*    margin-bottom: 12px;*/
+/*    display: block;*/
+/*}*/
 
-.form-control {
-    font-family: var(--font-family);
-    font-size: var(--font-size);
-    border-radius: var(--radius);
-    border: 1px solid var(--color-border);
-    padding: 12px 16px;
-    width: 100%;
-    color: var(--color-text);
-    background-color: var(--color-white);
-}
+/*.form-control {*/
+/*    font-family: var(--font-family);*/
+/*    font-size: var(--font-size);*/
+/*    border-radius: var(--radius);*/
+/*    border: 1px solid var(--color-border);*/
+/*    padding: 12px 16px;*/
+/*    width: 100%;*/
+/*    color: var(--color-text);*/
+/*    background-color: var(--color-white);*/
+/*}*/
 
-.form-control:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
-    outline: none;
-}
+/*.form-control:focus {*/
+/*    border-color: var(--color-primary);*/
+/*    box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);*/
+/*    outline: none;*/
+/*}*/
 
-.modal-footer {
-    border-top: 1px solid var(--color-border);
-    padding: 15px var(--space-xl);
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-}
+/*.modal-footer {*/
+/*    border-top: 1px solid var(--color-border);*/
+/*    padding: 15px var(--space-xl);*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    gap: 16px;*/
+/*}*/
 
-.btn {
-    font-family: var(--font-family);
-    font-size: var(--font-size);
-    padding: 12px 0;
-    width: 140px;
-    border-radius: var(--radius);
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-align: center;
-}
+/*.btn {*/
+/*    font-family: var(--font-family);*/
+/*    font-size: var(--font-size);*/
+/*    padding: 12px 0;*/
+/*    width: 140px;*/
+/*    border-radius: var(--radius);*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*    transition: background-color 0.3s ease;*/
+/*    text-align: center;*/
+/*}*/
 
-.btn-primary {
-    background-color: var(--color-primary);
-    color: var(--color-white);
-}
+/*.btn-primary {*/
+/*    background-color: var(--color-primary);*/
+/*    color: var(--color-white);*/
+/*}*/
 
-.btn-primary:hover {
-    background-color: var(--color-primary-hover);
-}
+/*.btn-primary:hover {*/
+/*    background-color: var(--color-primary-hover);*/
+/*}*/
 
-.btn-secondary {
-    background-color: var(--color-white);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-}
+/*.btn-secondary {*/
+/*    background-color: var(--color-white);*/
+/*    color: var(--color-text);*/
+/*    border: 1px solid var(--color-border);*/
+/*}*/
 
-.btn-secondary:hover {
-    color: var(--color-text);
-    background-color: #f5f5f5;
-    transition: 0.5s ease;
-}
+/*.btn-secondary:hover {*/
+/*    color: var(--color-text);*/
+/*    background-color: #f5f5f5;*/
+/*    transition: 0.5s ease;*/
+/*}*/
 
 @media (max-width: 480px) {
     .profile-card {

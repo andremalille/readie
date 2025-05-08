@@ -1,146 +1,247 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/book-info-style.css' %}?v=1"/>
+    <link rel="stylesheet" href="{% static 'css/user-book-info-style.css' %}?v=1"/>
+    <link rel="stylesheet" href="{% static 'css/modal-style.css' %}"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <title>{{ book.title }} - Info</title>
+</head>
+<body>
+<div class="container">
+    <div class="left-side">
+        {% if book.thumbnail %}
+        <div class="background-blur" style="background-image: url('{{ book.thumbnail }}');"></div>
+        {% else %}
+        <div class="background-blur" style="background-image: url('{% static 'images/image-not-found.png' %}');"></div>
+        {% endif %}
+        <div class="book-cover-container">
+            {% if book.thumbnail %}
+            <img src="{{ book.thumbnail }}" alt="book cover" class="book-cover-img">
+            {% else %}
+            <img src="{% static 'images/image-not-found.png' %}" alt="book cover" class="book-cover-img">
+            {% endif %}
+        </div>
+    </div>
+    <div class="right-side">
+        <div class="book-info-container">
+            <a href="{% url 'toggle_favourite' book_list.pk %}" class="favourite-link">
+                <button class="star-button {% if book_list.favourites %}active{% endif %}"
+                        title="{% if book_list.favourites %}Remove from favourites{% else %}Add to favourites{% endif %}">
+                    <svg class="star-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path class="star-path"
+                              d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z">
+                        </path>
+                    </svg>
+                </button>
+            </a>
 
-<div class="book-card">
-  <h2>{{ book.title }} | {{ book_list.get_status_display }} | {{ book_list.pages_read }}</h2>
-  {% if book.subtitle %}<h3>{{ book.subtitle }}</h3>{% endif %}
-  <p><strong>Authors:</strong> {{ book.authors }}</p>
-  <p><strong>Published:</strong> {{ book.published_year }}</p>
-  <p><strong>Rating:</strong> {{ book.average_rating|floatformat:1 }}/5.0</p>
-  <p><strong>ISBN-13:</strong> {{ book.isbn13 }}</p>
-  <p><strong>ISBN-10:</strong> {{ book.isbn10 }}</p>
-  <p><strong>Categories:</strong> {{ book.categories }}</p>
-  <p><strong>Description:</strong> {{ book.description }}</p>
-</div>
+            <header class="user-book-info-header">
+                <h1>{{ book.title }}</h1>
+                <button class="close-button" aria-label="Close" onclick="history.back()"></button>
+                <div class="vertical-line"></div>
+                <div class="pages-status-info">
+                    <p>Status: {{ book_list.get_status_display }}</p>
+                    <p>Pages read: {{ book_list.pages_read }}</p>
+                </div>
+            </header>
+            {% if book.subtitle %}<h3>{{ book.subtitle }}</h3>{% endif %}
+            <div class="action-buttons">
+                <!-- Status button -->
+                <button class="icon-button status-button" data-bs-toggle="modal"
+                        data-bs-target="#editModal{{ book_list.pk }}" title="Change Book Status">
+                    <i class="fas fa-tasks"></i>
+                </button>
+                <!-- Pages read button -->
+                <button class="icon-button pages-button" data-bs-toggle="modal"
+                        data-bs-target="#editPagesModal{{ book_list.pk }}" title="Change Pages Read">
+                    <i class="fas fa-bookmark"></i>
+                </button>
+                <!-- Delete button -->
+                <button class="icon-button remove-button" data-bs-toggle="modal"
+                        data-bs-target="#deleteModal{{ book_list.pk }}" title="Remove from List">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
 
-<div class="action-buttons">
-  <!-- Favourite toggle button -->
-  <button class="btn {% if book_list.favourites %}btn-warning{% else %}btn-outline-warning{% endif %}"
-          data-bs-toggle="modal" data-bs-target="#favouriteModal{{ book_list.pk }}">
-    <i class="fas fa-star"></i> {% if book_list.favourites %}Remove from favourites{% else %}Add to favourites{% endif %}
-  </button>
-
-  <!-- Status button -->
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ book_list.pk }}">
-    Change Book Status
-  </button>
-
-  <!-- Pages read button -->
-  <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editPagesModal{{ book_list.pk }}">
-    Change pages read
-  </button>
-
-  <!-- Delete button -->
-  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ book_list.pk }}">
-    Remove from List
-  </button>
+            <div class="book-details-wrapper">
+                <div class="book-details">
+                    <div class="detail-pair">
+                        <p class="detail-label">Authors:</p>
+                        <div class="detail-value"><p>{{ book.authors }}</p></div>
+                    </div>
+                    <div class="detail-pair">
+                        <p class="detail-label">Published:</p>
+                        <div class="detail-value scrollable-value"><p>{{ book.published_year }}</p></div>
+                    </div>
+                    <div class="detail-pair">
+                        <p class="detail-label">Number of pages:</p>
+                        <div class="detail-value scrollable-value"><p>{{ book.num_pages }}</p></div>
+                    </div>
+                    <div class="detail-pair">
+                        <p class="detail-label">Rating:</p>
+                        <div class="detail-value scrollable-value"><p>{{ book.average_rating|floatformat:1 }}/5.0</p>
+                        </div>
+                    </div>
+                    <div class="detail-pair">
+                        <p class="detail-label">ISBN-13:</p>
+                        <div class="detail-value scrollable-value"><p>{{ book.isbn13 }}</p></div>
+                    </div>
+                    <div class="detail-pair">
+                        <p class="detail-label">ISBN-10:</p>
+                        <div class="detail-value scrollable-value"><p>{{ book.isbn10 }}</p></div>
+                    </div>
+                    <div class="detail-pair">
+                        <p class="detail-label">Categories:</p>
+                        <div class="detail-value scrollable-value"><p>{{ book.categories }}</p></div>
+                    </div>
+                    <div class="detail-pair">
+                        <p class="detail-label">Description:</p>
+                        <div class="detail-value book-description">
+                            <p>{{ book.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Edit Status Modal -->
 <div class="modal fade" id="editModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="post" action="{% url 'edit_book' book_list.pk %}">
-      {% csrf_token %}
-      <input type="hidden" name="action_type" value="change_status">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Status</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          {{ form.status }}
-          {% if form.status.errors %}
-            <div class="alert alert-danger">
-              {{ form.status.errors }}
+    <div class="modal-dialog">
+        <form method="post" action="{% url 'edit_book' book_list.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="action_type" value="change_status">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.status.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
             </div>
-          {% endif %}
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save changes</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </form>
-  </div>
+        </form>
+    </div>
 </div>
 
 <!-- Edit Pages Modal -->
 <div class="modal fade" id="editPagesModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="post" action="{% url 'edit_book' book_list.pk %}">
-      {% csrf_token %}
-      <input type="hidden" name="action_type" value="change_pages">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Pages</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          {{ form.pages_read }}
-          {% if form.pages_read.errors %}
-            <div class="alert alert-danger">
-              {{ form.pages_read.errors }}
+    <div class="modal-dialog">
+        <form method="post" action="{% url 'edit_book' book_list.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="action_type" value="change_pages">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Pages</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {% if book.num_pages %}
+                    <p class="text-muted">Book has {{ book.num_pages }} pages total</p>
+                    {% endif %}
+                    {{ form.pages_read }}
+                    {% if form.pages_read.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.pages_read.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
             </div>
-          {% endif %}
-          {% if book.num_pages %}
-            <small class="text-muted">Book has {{ book.num_pages }} pages total</small>
-          {% endif %}
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save changes</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Favourite Toggle Modal -->
-<div class="modal fade" id="favouriteModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="post" action="{% url 'edit_book' book_list.pk %}">
-      {% csrf_token %}
-      <input type="hidden" name="action_type" value="toggle_favourite">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            {% if book_list.favourites %}Remove from Favourites{% else %}Add to Favourites{% endif %}
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <p>Are you sure you want to {% if book_list.favourites %}remove{% else %}add{% endif %}
-          <strong>"{{ book.title }}"</strong> {% if book_list.favourites %}from{% else %}to{% endif %} your favourites?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn {% if book_list.favourites %}btn-warning{% else %}btn-outline-warning{% endif %}">
-            {% if book_list.favourites %}Remove from favourites{% else %}Add to favourites{% endif %}
-          </button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </form>
-  </div>
+        </form>
+    </div>
 </div>
 
 <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="post" action="{% url 'delete_book' book_list.pk %}">
-      {% csrf_token %}
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Confirm Deletion</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to remove <strong>"{{ book.title }}"</strong> from your list?
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-danger">Yes, Delete</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </form>
-  </div>
+    <div class="modal-dialog">
+        <form method="post" action="{% url 'delete_book' book_list.pk %}">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to remove <strong>"{{ book.title }}"</strong> from your list?
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
+
+</body>
+</html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const starButton = document.querySelector('.star-button');
+
+    starButton.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const url = this.closest('a').getAttribute('href');
+
+        // Send AJAX request
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                this.classList.toggle('active');
+
+                if (this.classList.contains('active')) {
+                    this.setAttribute('title', 'Remove from favourites');
+                } else {
+                    this.setAttribute('title', 'Add to favourites');
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>

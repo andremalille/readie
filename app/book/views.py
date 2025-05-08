@@ -1,6 +1,8 @@
 import re
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required # noqa
+from django.contrib.auth.decorators import login_required  # noqa
+from django.views.decorators.http import require_http_methods
+
 from core.models import Book, BookList
 from django.core.paginator import Paginator
 from book.forms import (
@@ -8,6 +10,7 @@ from book.forms import (
     BookSearchForm,
 )
 from django.db.models import Q
+from django.http import JsonResponse
 
 
 def books_view(request):
@@ -49,8 +52,10 @@ def books_view(request):
             year_max = form.cleaned_data.get('year_max')
 
             if selected_categories:
+                query = Q()
                 for category in selected_categories:
-                    books_list = books_list.filter(categories__icontains=category)
+                    query |= Q(categories__icontains=category)
+                books_list = books_list.filter(query)
 
             if pages_min is not None:
                 books_list = books_list.filter(num_pages__gte=pages_min)
@@ -227,3 +232,18 @@ def delete_book(request, pk):
         book_instance.delete()
         return redirect('user_list')
     return render(request, 'delete_book.html', {'book': book_instance})
+
+
+@require_http_methods(["GET", "POST"])
+def toggle_favourite(request, pk):
+    book_list = BookList.objects.get(pk=pk, user=request.user)
+    book_list.favourites = not book_list.favourites
+    book_list.save()
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'is_favourite': book_list.favourites
+        })
+
+    return redirect('user_book_info', pk=pk)
