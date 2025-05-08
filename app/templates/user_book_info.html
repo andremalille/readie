@@ -53,17 +53,14 @@
             </header>
             {% if book.subtitle %}<h3>{{ book.subtitle }}</h3>{% endif %}
             <div class="action-buttons">
-                <!-- Status button -->
                 <button class="icon-button status-button" data-bs-toggle="modal"
                         data-bs-target="#editModal{{ book_list.pk }}" title="Change Book Status">
                     <i class="fas fa-tasks"></i>
                 </button>
-                <!-- Pages read button -->
                 <button class="icon-button pages-button" data-bs-toggle="modal"
                         data-bs-target="#editPagesModal{{ book_list.pk }}" title="Change Pages Read">
                     <i class="fas fa-bookmark"></i>
                 </button>
-                <!-- Delete button -->
                 <button class="icon-button remove-button" data-bs-toggle="modal"
                         data-bs-target="#deleteModal{{ book_list.pk }}" title="Remove from List">
                     <i class="fas fa-trash-alt"></i>
@@ -113,7 +110,6 @@
     </div>
 </div>
 
-<!-- Edit Status Modal -->
 <div class="modal fade" id="editModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <form method="post" action="{% url 'edit_book' book_list.pk %}">
@@ -156,7 +152,14 @@
                     {% if book.num_pages %}
                     <p class="text-muted">Book has {{ book.num_pages }} pages total</p>
                     {% endif %}
-                    {{ form.pages_read }}
+
+                    <div class="form-group">
+                        <label for="id_pages_read">Pages read:</label>
+                        <input type="number" name="pages_read" id="id_pages_read" class="form-control"
+                               value="{{ book_list.pages_read }}" min="0"
+                               {% if book.num_pages %}max="{{ book.num_pages }}"{% endif %}>
+                    </div>
+
                     {% if form.pages_read.errors %}
                     <div class="alert alert-danger">
                         {{ form.pages_read.errors }}
@@ -172,7 +175,6 @@
     </div>
 </div>
 
-<!-- Delete Modal -->
 <div class="modal fade" id="deleteModal{{ book_list.pk }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <form method="post" action="{% url 'delete_book' book_list.pk %}">
@@ -200,13 +202,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const starButton = document.querySelector('.star-button');
-
     starButton.addEventListener('click', function(e) {
         e.preventDefault();
 
         const url = this.closest('a').getAttribute('href');
 
-        // Send AJAX request
         fetch(url, {
             method: 'POST',
             headers: {
@@ -228,6 +228,121 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error:', error));
     });
+
+    setupStatusFormSubmission();
+    setupPagesFormSubmission();
+
+    function setupStatusFormSubmission() {
+        const statusForm = document.querySelector('#editModal' + getBookListPk() + ' form');
+        if (statusForm) {
+            statusForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+
+                fetch(this.getAttribute('action'), {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector('.pages-status-info p:first-child').textContent = 'Status: ' + data.status_display;
+
+                        const modal = bootstrap.Modal.getInstance(document.querySelector('#editModal' + getBookListPk()));
+                        modal.hide();
+                    } else if (data.errors) {
+                        let errorDiv = statusForm.querySelector('.alert-danger');
+                        if (!errorDiv) {
+                            errorDiv = document.createElement('div');
+                            errorDiv.className = 'alert alert-danger mt-2';
+                            statusForm.querySelector('.modal-body').appendChild(errorDiv);
+                        }
+                        errorDiv.textContent = data.errors.status || 'An error occurred';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        }
+    }
+    function setupPagesFormSubmission() {
+        const pagesForm = document.querySelector('#editPagesModal' + getBookListPk() + ' form');
+        if (pagesForm) {
+            pagesForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const pagesInput = pagesForm.querySelector('input[name="pages_read"]');
+
+                if (!pagesInput) {
+                    console.error("Pages read input not found or has incorrect name");
+                    const inputFields = pagesForm.querySelectorAll('input[type="number"], input[type="text"]');
+                    if (inputFields.length > 0) {
+                        console.log("Found potential pages input, setting name");
+                        inputFields[0].name = "pages_read";
+                        formData.set("pages_read", inputFields[0].value);
+                    }
+                }
+
+                fetch(this.getAttribute('action'), {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector('.pages-status-info p:last-child').textContent = 'Pages read: ' + data.pages_read;
+
+                        const modal = bootstrap.Modal.getInstance(document.querySelector('#editPagesModal' + getBookListPk()));
+                        modal.hide();
+                    } else {
+                        let errorDiv = pagesForm.querySelector('.alert-danger');
+                        if (!errorDiv) {
+                            errorDiv = document.createElement('div');
+                            errorDiv.className = 'alert alert-danger mt-2';
+                            pagesForm.querySelector('.modal-body').appendChild(errorDiv);
+                        }
+
+                        if (data.errors && data.errors.pages_read) {
+                            errorDiv.textContent = data.errors.pages_read;
+                        } else if (data.errors) {
+                            errorDiv.textContent = JSON.stringify(data.errors);
+                        } else {
+                            errorDiv.textContent = 'An error occurred while updating pages';
+                        }
+
+                        if (data.submitted_value) {
+                            console.log("Submitted value:", data.submitted_value);
+                        }
+                        if (data.form_fields) {
+                            console.log("Form fields:", data.form_fields);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Network error occurred: ' + error.message);
+                });
+            });
+        } else {
+            console.error("Pages form not found with selector: #editPagesModal" + getBookListPk() + " form");
+        }
+    }
+
+    function getBookListPk() {
+        const modal = document.querySelector('[id^="editModal"]');
+        if (modal) {
+            return modal.id.replace('editModal', '');
+        }
+        return '';
+    }
 
     function getCookie(name) {
         let cookieValue = null;

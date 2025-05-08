@@ -193,6 +193,7 @@ def user_book_info(request, pk):
 def edit_book_view(request, pk):
     book_list = BookList.objects.get(pk=pk, user=request.user)
     book = book_list.book
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     if request.method == 'POST':
         action_type = request.POST.get('action_type')
@@ -202,19 +203,57 @@ def edit_book_view(request, pk):
             book_list.save()
             return redirect('user_book_info', pk=pk)
 
-        form = BookForm(request.POST, instance=book_list)
-
         if action_type == 'change_status':
-            if form.is_valid():
-                book_list.status = form.cleaned_data['status']
+            status = request.POST.get('status')
+            if status:
+                book_list.status = status
                 book_list.save()
+
+                if is_ajax:
+                    return JsonResponse({
+                        'success': True,
+                        'status_display': book_list.get_status_display()
+                    })
                 return redirect('user_book_info', pk=pk)
+            elif is_ajax:
+                return JsonResponse({
+                    'success': False,
+                    'errors': {'status': 'Status field is required'}
+                })
 
         elif action_type == 'change_pages':
-            if form.is_valid():
-                book_list.pages_read = form.cleaned_data['pages_read']
-                book_list.save()
-                return redirect('user_book_info', pk=pk)
+            try:
+                pages_read = int(request.POST.get('pages_read', 0))
+                if pages_read < 0:
+                    raise ValueError("Pages read cannot be negative")
+
+                if book.num_pages and pages_read > book.num_pages:
+                    if is_ajax:
+                        return JsonResponse({
+                            'success': False,
+                            'errors': {'pages_read': f'Cannot exceed total pages ({book.num_pages})'}
+                        })
+                else:
+                    book_list.pages_read = pages_read
+                    book_list.save()
+
+                    if is_ajax:
+                        return JsonResponse({
+                            'success': True,
+                            'pages_read': book_list.pages_read
+                        })
+                    return redirect('user_book_info', pk=pk)
+            except (ValueError, TypeError) as e:
+                if is_ajax:
+                    return JsonResponse({
+                        'success': False,
+                        'errors': {'pages_read': str(e) if "Pages read" in str(e) else 'Invalid page number'}
+                    })
+
+        form = BookForm(request.POST, instance=book_list)
+        if form.is_valid():
+            form.save()
+            return redirect('user_book_info', pk=pk)
     else:
         form = BookForm(instance=book_list)
 
