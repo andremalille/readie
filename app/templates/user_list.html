@@ -1,35 +1,37 @@
+{% load static %}
 <a href="{% url 'logout' %}" class="btn">Logout</a>
 <a href="{% url 'profile' %}" class="btn">Profile</a>
+<link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
 
 <h1>Book Collection</h1>
 
 <div class="book-list">
-  <form method="get">
-    {{ form.q }}
-    <button type="submit" name="action" value="search">Search</button>
+    <form method="get">
+        {{ form.q }}
+        <button type="submit" name="action" value="search">Search</button>
 
-    <fieldset>
-    <legend>Filter by Status</legend>
-    {% for checkbox in form.statuses %}
-      <div class="checkbox-item">
-        <label>
-          {{ checkbox.tag }}
-          {{ checkbox.choice_label }}
-        </label>
-      </div>
+        <fieldset>
+            <legend>Filter by Status</legend>
+            {% for checkbox in form.statuses %}
+            <div class="checkbox-item">
+                <label>
+                    {{ checkbox.tag }}
+                    {{ checkbox.choice_label }}
+                </label>
+            </div>
+            {% endfor %}
+            <button type="submit" name="action" value="filter">Apply Filter</button>
+            <a href="{% url 'user_list' %}" class="btn">Clear</a>
+        </fieldset>
+        <button type="submit" name="action" value="favourites">Show Favourites</button>
+
+    </form>
+    {% for book in page_obj %}
+    <div class="book-card">
+        <a href="{% url 'user_book_info' pk=book.pk %}"><h2>{{ book.book }}</h2></a>
+        <p><strong>Status:</strong> {{ book.get_status_display }}</p>
+    </div>
     {% endfor %}
-    <button type="submit" name="action" value="filter">Apply Filter</button>
-      <a href="{% url 'user_list' %}" class="btn">Clear</a>
-  </fieldset>
-    <button type="submit" name="action" value="favourites">Show Favourites</button>
-
-</form>
-  {% for book in page_obj %}
-  <div class="book-card">
-    <a href="{% url 'user_book_info' pk=book.pk %}"><h2>{{ book.book }}</h2></a>
-    <p><strong>Status:</strong> {{ book.get_status_display }}</p>
-  </div>
-  {% endfor %}
 </div>
 
 <div class="pagination">

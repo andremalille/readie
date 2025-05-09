@@ -1,57 +1,59 @@
+{% load static %}
 <a href="{% url 'logout' %}" class="btn">Logout</a>
 <a href="{% url 'profile' %}" class="btn">Profile</a>
+<link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
 
 <h1>Book Collection</h1>
 
 <div class="book-list">
-  <form method="get">
-    <div>
-        {{ form.q.label }} {{ form.q }}
-      <button type="submit" name="action" value="search">Search</button>
+    <form method="get">
+        <div>
+            {{ form.q.label }} {{ form.q }}
+            <button type="submit" name="action" value="search">Search</button>
+        </div>
+
+        <input type="text" id="category-search" placeholder="Filter categories...">
+
+        <div id="category-checkboxes">
+            {% for value, label in form.categories.field.choices %}
+            <div class="category-item">
+                <label>
+                    <input type="checkbox" name="categories" value="{{ value }}"
+                           {% if value in form.categories.value %}checked{% endif %}>
+                    {{ label }}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <label>{{ form.pages_min.label }}</label> {{ form.pages_min }}
+            <label>{{ form.pages_max.label }}</label> {{ form.pages_max }}
+        </div>
+
+        <div>
+            <label>{{ form.rating_min.label }}</label> {{ form.rating_min }}
+            <label>{{ form.rating_max.label }}</label> {{ form.rating_max }}
+        </div>
+
+        <div>
+            <label>{{ form.year_min.label }}</label> {{ form.year_min }}
+            <label>{{ form.year_max.label }}</label> {{ form.year_max }}
+        </div>
+
+        <button type="submit" name="action" value="filter">Filter</button>
+        <button type="submit" name="action" value="recommend">Recommend</button>
+        <a href="{% url 'books' %}" class="btn">Clear</a>
+    </form>
+    {% for book in page_obj %}
+    <div class="book-card">
+        <a href="{% url 'book_info' pk=book.pk %}"><h2>{{ book.title }}</h2></a>
+        <p><strong>Authors:</strong> {{ book.authors }}</p>
+        <p><strong>Published:</strong> {{ book.published_year }}</p>
+        <p><strong>Rating:</strong> {{ book.average_rating|floatformat:1 }}/5.0</p>
+        <p><strong>ISBN-13:</strong> {{ book.isbn13 }}</p>
     </div>
-
-    <input type="text" id="category-search" placeholder="Filter categories...">
-
-<div id="category-checkboxes">
-  {% for value, label in form.categories.field.choices %}
-    <div class="category-item">
-      <label>
-        <input type="checkbox" name="categories" value="{{ value }}"
-               {% if value in form.categories.value %}checked{% endif %}>
-        {{ label }}
-      </label>
-    </div>
-  {% endfor %}
-</div>
-
-    <div>
-        <label>{{ form.pages_min.label }}</label> {{ form.pages_min }}
-        <label>{{ form.pages_max.label }}</label> {{ form.pages_max }}
-    </div>
-
-    <div>
-        <label>{{ form.rating_min.label }}</label> {{ form.rating_min }}
-        <label>{{ form.rating_max.label }}</label> {{ form.rating_max }}
-    </div>
-
-    <div>
-        <label>{{ form.year_min.label }}</label> {{ form.year_min }}
-        <label>{{ form.year_max.label }}</label> {{ form.year_max }}
-    </div>
-
-    <button type="submit" name="action" value="filter">Filter</button>
-      <button type="submit" name="action" value="recommend">Recommend</button>
-      <a href="{% url 'books' %}" class="btn">Clear</a>
-</form>
-  {% for book in page_obj %}
-  <div class="book-card">
-    <a href="{% url 'book_info' pk=book.pk %}"><h2>{{ book.title }}</h2></a>
-    <p><strong>Authors:</strong> {{ book.authors }}</p>
-    <p><strong>Published:</strong> {{ book.published_year }}</p>
-    <p><strong>Rating:</strong> {{ book.average_rating|floatformat:1 }}/5.0</p>
-    <p><strong>ISBN-13:</strong> {{ book.isbn13 }}</p>
-  </div>
-  {% endfor %}
+    {% endfor %}
 </div>
 
 <div class="pagination">
@@ -74,13 +76,13 @@
 
 
 <script>
-  document.getElementById("category-search").addEventListener("input", function () {
-    const filter = this.value.toLowerCase();
-    const items = document.querySelectorAll("#category-checkboxes .category-item");
+    document.getElementById("category-search").addEventListener("input", function () {
+        const filter = this.value.toLowerCase();
+        const items = document.querySelectorAll("#category-checkboxes .category-item");
 
-    items.forEach(item => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = text.includes(filter) ? "block" : "none";
+        items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(filter) ? "block" : "none";
+        });
     });
-  });
 </script>
