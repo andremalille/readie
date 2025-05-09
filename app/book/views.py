@@ -1,6 +1,7 @@
 import re
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required  # noqa
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 
 from core.models import Book, BookList
@@ -13,6 +14,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 
 
+@login_required()
 def books_view(request):
     form = BookSearchForm(request.GET)
     books_list = Book.objects.all()
@@ -119,8 +121,9 @@ def books_view(request):
     return render(request, 'book_list.html', context)
 
 
+@login_required()
 def book_info(request, pk):
-    book = Book.objects.get(pk=pk)
+    book = get_object_or_404(Book, pk=pk)
 
     if request.method == 'POST':
         form = BookForm(request.POST, book_instance=book)
@@ -131,8 +134,9 @@ def book_info(request, pk):
     return render(request, 'book_info.html', context)
 
 
+@login_required()
 def book_add_to_list(request, pk):
-    book_to_add = Book.objects.get(pk=pk)
+    book_to_add = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
         form = BookForm(request.POST, book_instance=book_to_add)
         if form.is_valid():
@@ -144,9 +148,10 @@ def book_add_to_list(request, pk):
     else:
         form = BookForm(book_instance=book_to_add)
     context = {'form': form, 'book': book_to_add}
-    return render(request, 'book_add_to_list.html', context)
+    return render(request, 'book_info.html', context)
 
 
+@login_required()
 def book_user_list(request):
     form = BookSearchForm(request.GET)
     books_list = BookList.objects.filter(user=request.user)
@@ -180,8 +185,9 @@ def book_user_list(request):
     return render(request, 'user_list.html', context)
 
 
+@login_required()
 def user_book_info(request, pk):
-    book_list_instance = BookList.objects.get(pk=pk)
+    book_list_instance = get_object_or_404(BookList, pk=pk, user=request.user)
     book = book_list_instance.book
 
     form = BookForm(instance=book_list_instance)
@@ -190,8 +196,9 @@ def user_book_info(request, pk):
     return render(request, 'user_book_info.html', context)
 
 
+@login_required()
 def edit_book_view(request, pk):
-    book_list = BookList.objects.get(pk=pk, user=request.user)
+    book_list = get_object_or_404(BookList, pk=pk, user=request.user)
     book = book_list.book
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
@@ -231,7 +238,9 @@ def edit_book_view(request, pk):
                     if is_ajax:
                         return JsonResponse({
                             'success': False,
-                            'errors': {'pages_read': f'Cannot exceed total pages ({book.num_pages})'}
+                            'errors': {
+                                'pages_read': f'Cannot exceed total pages ({book.num_pages})'
+                            }
                         })
                 else:
                     book_list.pages_read = pages_read
@@ -247,7 +256,10 @@ def edit_book_view(request, pk):
                 if is_ajax:
                     return JsonResponse({
                         'success': False,
-                        'errors': {'pages_read': str(e) if "Pages read" in str(e) else 'Invalid page number'}
+                        'errors':
+                            {
+                                'pages_read': str(e) if "Pages read" in str(e) else 'Invalid page number'
+                            }
                     })
 
         form = BookForm(request.POST, instance=book_list)
@@ -265,17 +277,19 @@ def edit_book_view(request, pk):
     return render(request, 'user_book_info.html', context)
 
 
+@login_required()
 def delete_book(request, pk):
     book_instance = BookList.objects.get(pk=pk, user=request.user)
     if request.method == 'POST':
         book_instance.delete()
         return redirect('user_list')
-    return render(request, 'delete_book.html', {'book': book_instance})
+    return render(request, 'user_book_info.html', {'book': book_instance})
 
 
+@login_required()
 @require_http_methods(["GET", "POST"])
 def toggle_favourite(request, pk):
-    book_list = BookList.objects.get(pk=pk, user=request.user)
+    book_list = get_object_or_404(BookList, pk=pk, user=request.user)
     book_list.favourites = not book_list.favourites
     book_list.save()
 

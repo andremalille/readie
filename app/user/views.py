@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import (
@@ -57,6 +58,7 @@ def logout_view(request):
     return redirect('login')
 
 
+@login_required()
 def profile_view(request):
     user = request.user
     context = {'user': user}
@@ -64,6 +66,7 @@ def profile_view(request):
     return render(request, 'profile.html', context)
 
 
+@login_required()
 def change_profile_image(request):
     if request.method == 'POST':
         if request.FILES.get('image'):
@@ -75,6 +78,7 @@ def change_profile_image(request):
     return redirect('profile')
 
 
+@login_required()
 def change_info_view(request):
     if request.method == 'POST':
         form = UserChangeInfoForm(request.POST, instance=request.user)
