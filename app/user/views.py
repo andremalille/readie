@@ -10,6 +10,7 @@ from .forms import (
 
 
 def register_view(request):
+    """Register a new user."""
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -24,6 +25,7 @@ def register_view(request):
 
 
 def user_name_view(request):
+    """Assign user name."""
     user = request.user
     if request.method == 'POST':
         form = UserNameForm(request.POST)
@@ -39,6 +41,7 @@ def user_name_view(request):
 
 
 def login_view(request):
+    """Login user to their account"""
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         if form.is_valid():
@@ -54,12 +57,14 @@ def login_view(request):
 
 
 def logout_view(request):
+    """Logs out user"""
     logout(request)
     return redirect('login')
 
 
 @login_required()
 def profile_view(request):
+    """Display user's profile information'"""
     user = request.user
     context = {'user': user}
 
@@ -68,6 +73,7 @@ def profile_view(request):
 
 @login_required()
 def change_profile_image(request):
+    """Change user's profile image'"""
     if request.method == 'POST':
         if request.FILES.get('image'):
             request.user.image = request.FILES['image']
@@ -80,6 +86,7 @@ def change_profile_image(request):
 
 @login_required()
 def change_info_view(request):
+    """Change user's profile information."""
     if request.method == 'POST':
         form = UserChangeInfoForm(request.POST, instance=request.user)
         if form.is_valid():

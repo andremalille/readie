@@ -16,6 +16,7 @@ from django.http import JsonResponse
 
 @login_required()
 def books_view(request):
+    """Display all books in database."""
     form = BookSearchForm(request.GET)
     books_list = Book.objects.all()
     sort = False
@@ -123,6 +124,7 @@ def books_view(request):
 
 @login_required()
 def book_info(request, pk):
+    """Display information of a selected book."""
     book = get_object_or_404(Book, pk=pk)
 
     if request.method == 'POST':
@@ -136,6 +138,7 @@ def book_info(request, pk):
 
 @login_required()
 def book_add_to_list(request, pk):
+    """Add a book to a list."""
     book_to_add = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
         form = BookForm(request.POST, book_instance=book_to_add)
@@ -153,6 +156,7 @@ def book_add_to_list(request, pk):
 
 @login_required()
 def book_user_list(request):
+    """Display all books that belong to a user list."""
     form = BookSearchForm(request.GET)
     books_list = BookList.objects.filter(user=request.user)
 
@@ -187,6 +191,7 @@ def book_user_list(request):
 
 @login_required()
 def user_book_info(request, pk):
+    """Display information of a selected book from a user list."""
     book_list_instance = get_object_or_404(BookList, pk=pk, user=request.user)
     book = book_list_instance.book
 
@@ -198,6 +203,7 @@ def user_book_info(request, pk):
 
 @login_required()
 def edit_book_view(request, pk):
+    """Edit a book from a user list."""
     book_list = get_object_or_404(BookList, pk=pk, user=request.user)
     book = book_list.book
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
@@ -279,6 +285,7 @@ def edit_book_view(request, pk):
 
 @login_required()
 def delete_book(request, pk):
+    """Delete a book from a user list."""
     book_instance = BookList.objects.get(pk=pk, user=request.user)
     if request.method == 'POST':
         book_instance.delete()
@@ -289,6 +296,7 @@ def delete_book(request, pk):
 @login_required()
 @require_http_methods(["GET", "POST"])
 def toggle_favourite(request, pk):
+    """Set a book as user's favourite."""
     book_list = get_object_or_404(BookList, pk=pk, user=request.user)
     book_list.favourites = not book_list.favourites
     book_list.save()

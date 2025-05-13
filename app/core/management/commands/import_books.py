@@ -4,6 +4,7 @@ from core.models import Book
 
 
 class Command(BaseCommand):
+    """Import books from csv file."""
     help = 'Imports books from CSV'
 
     def add_arguments(self, parser):

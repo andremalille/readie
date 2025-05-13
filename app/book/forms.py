@@ -3,6 +3,7 @@ from core.models import BookList
 
 
 class BookForm(forms.ModelForm):
+    """Form for creating and updating book lists"""
     class Meta:
         model = BookList
         fields = ('status', 'favourites', 'pages_read')
@@ -31,6 +32,7 @@ class BookForm(forms.ModelForm):
 
 
 class BookSearchForm(forms.Form):
+    """Form for searching and filtering books"""
     q = forms.CharField(
         label='Search',
         required=False,
