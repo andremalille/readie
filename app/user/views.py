@@ -1,6 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import (
+    login,
+    authenticate,
+    logout,
+    update_session_auth_hash
+)
 from .forms import (
     UserRegistrationForm,
     UserLoginForm,
@@ -33,7 +38,7 @@ def user_name_view(request):
             name = form.cleaned_data['name']
             user.name = name
             user.save()
-            login(request, user)
+            update_session_auth_hash(request, user)
             return redirect('books')
     else:
         form = UserNameForm()
@@ -64,7 +69,7 @@ def logout_view(request):
 
 @login_required()
 def profile_view(request):
-    """Display user's profile information'"""
+    """Display user's profile information"""
     user = request.user
     context = {'user': user}
 
@@ -73,14 +78,11 @@ def profile_view(request):
 
 @login_required()
 def change_profile_image(request):
-    """Change user's profile image'"""
+    """Change user's profile image"""
     if request.method == 'POST':
         if request.FILES.get('image'):
             request.user.image = request.FILES['image']
             request.user.save()
-            print(f"Image saved: {request.user.image.url}")
-        else:
-            print("No image in request.FILES")
     return redirect('profile')
 
 
@@ -93,8 +95,10 @@ def change_info_view(request):
             user = form.save(commit=False)
             if form.cleaned_data.get('new_password'):
                 user.set_password(form.cleaned_data['new_password'])
-            user.save()
-            login(request, user)
+                user.save()
+                update_session_auth_hash(request, user)
+            else:
+                user.save()
             return redirect('profile')
     else:
         form = UserChangeInfoForm(instance=request.user)
