@@ -139,7 +139,7 @@ class TestBooks(TestCase):
             status='finished',
             favourites=True,
         )
-        book = create_book(
+        create_book(
             title='Recommend Book',
             categories='Test Category 3',
         )
