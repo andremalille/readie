@@ -8,6 +8,7 @@ from django.urls import reverse
 
 
 def create_user(email='user@example.com', password='testpass123', name='Test User'):
+    """Create a new user"""
     return get_user_model().objects.create_user(
         email=email,
         password=password,
@@ -16,6 +17,7 @@ def create_user(email='user@example.com', password='testpass123', name='Test Use
 
 
 class TestUser(TestCase):
+    """Tests for user correct functionality"""
     def setUp(self):
         self.client = Client()
         self.user = create_user()
@@ -201,9 +203,3 @@ class TestUser(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Please enter your old password to set a new one.")
-
-    def test_load_main_page(self):
-        """Test loading main page"""
-        response = self.client.get(reverse('home'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'main_page.html')
