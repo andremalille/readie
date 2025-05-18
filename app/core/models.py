@@ -1,3 +1,6 @@
+import uuid
+import os
+
 from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -5,6 +8,14 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.db import models
+
+
+def user_image_file_path(instance, filename):
+    """Generate file path for new user image"""
+    ext = os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+
+    return os.path.join('uploads', 'users', filename)
 
 
 class UserManager(BaseUserManager):
@@ -35,6 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    image = models.ImageField(blank=True, null=True, upload_to=user_image_file_path)
 
     objects = UserManager()
 
@@ -65,7 +77,8 @@ class BookList(models.Model):
         ('read_later', 'Read later'),
         ('currently_reading', 'Currently reading'),
         ('finished', 'Finished'),
-        ('favourites', 'Favourites'),
+        ('on_hold', 'On hold'),
+        ('re_reading', 'Re-reading'),
         ('dropped_reading', 'Dropped reading'),
     ]
 
@@ -75,6 +88,8 @@ class BookList(models.Model):
         on_delete=models.CASCADE,
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    favourites = models.BooleanField(default=False)
+    pages_read = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
         return f"{self.book} | {self.user}"

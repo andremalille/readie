@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 
 
 class UserRegistrationForm(forms.ModelForm):
+    """Form for registering a new user."""
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
 
@@ -23,12 +24,14 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class UserNameForm(forms.ModelForm):
+    """Form for assigning a new username."""
     class Meta:
         model = User
         fields = ('name',)
 
 
 class UserLoginForm(forms.Form):
+    """Form for logging in."""
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
 
@@ -47,6 +50,7 @@ class UserLoginForm(forms.Form):
 
 
 class UserChangeInfoForm(forms.ModelForm):
+    """Form for changing user profile."""
     old_password = forms.CharField(
         widget=forms.PasswordInput,
         required=False,

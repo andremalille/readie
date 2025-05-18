@@ -5,13 +5,13 @@
     {% load form_tags %}
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="{% static 'css/reset.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/login_register.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/login-register.css' %}?v=1" />
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
     <title>Readie - Sign Up</title>
 </head>
 <body>
     <div class='container'>
-
         <div class="left-side">
             <a href="#" class="logo">
                 <img src="{% static 'images/logo.png' %}" alt="logo">
@@ -20,57 +20,53 @@
         <div class="right-side">
             <div class="form-container">
                 <h1>Sign Up</h1>
-                <form class="form" method="post" action="{% url 'login' %}">
+                <form class="form" method="post" action="{% url 'register' %}">
                     {% csrf_token %}
-
                     <div class="input-field">
                         <label for="id_email" class="label">Email</label>
                         <input type="email" name="email" id="id_email" class="input" placeholder="Enter your email"
-                            required>
-                            {% if form.email.errors %}
+                            required value="{{ form.data.email|default:'' }}">
+                        {% if form.email.errors %}
                         <div class="errorlist error">
                             {% for error in form.email.errors %}
                             {{ error }}
                             {% endfor %}</div>
                         {% endif %}
                     </div>
-
                     <div class="input-field">
                         <label for="id_password" class="label">Password</label>
                         <input type="password" name="password" id="id_password" class="input"
-                            placeholder="Enter your password" required>
+                            placeholder="Enter your password" required value="{{ form.data.password|default:'' }}">
                         <div class="errorlist error">
                             {% for error in form.password.errors %}
                             {{ error }}
                             {% endfor %} </div>
                     </div>
-
-                    <div class="input-field" id="confirm-password-container" style="display: none;">
+                    <div class="input-field" id="confirm-password-container">
                         <label for="id_confirm_password" class="label">Confirm Password</label>
                         <input type="password" name="confirm_password" id="id_confirm_password" class="input"
-                               placeholder="Confirm your password" {% if form.data.password %}required{% endif %}/>
+                               placeholder="Confirm your password" value="{{ form.data.confirm_password|default:'' }}">
+                        <div id="password-match-error" class="errorlist error password-mismatch-error" style="display: none;">
+                            Passwords do not match
+                        </div>
                         {% if form.confirm_password.errors %}
-                        <div class="errorlist">
+                        <div class="errorlist error confirm-password-errors">
                             {% for error in form.confirm_password.errors %}
                             {{ error }}
                             {% endfor %}
                         </div>
                         {% endif %}
                     </div>
-
-
+                    <div id="form-level-errors"></div>
                     {% if form.non_field_errors %}
-                    <div class="error-message error"> 
+                    <div class="error">
                         {% for error in form.non_field_errors %}
                         {{ error }}
                         {% endfor %}
                     </div>
                     {% endif %}
-
-                    <button type="submit" class="form-button">Sign Up</button>
-
+                    <button type="submit" id="signup-button" class="form-button">Sign Up</button>
                     <a href="{% url 'login' %}" class="form-link">Already have an account? Log in</a>
-
                 </form>
                 <div class="socials-container">
                     <h3>Follow us</h3>
@@ -86,13 +82,83 @@
 </html>
 <script>
     const passwordInput = document.getElementById('id_password');
+    const confirmPasswordInput = document.getElementById('id_confirm_password');
     const confirmPasswordContainer = document.getElementById('confirm-password-container');
+    const passwordMatchError = document.getElementById('password-match-error');
+    const signupButton = document.getElementById('signup-button');
+
+    function checkPasswordsMatch() {
+        if (passwordInput.value && confirmPasswordInput.value) {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                passwordMatchError.style.display = 'block';
+                signupButton.disabled = true;
+                signupButton.classList.add('button-disabled');
+                return false;
+            } else {
+                passwordMatchError.style.display = 'none';
+                signupButton.disabled = false;
+                signupButton.classList.remove('button-disabled');
+                return true;
+            }
+        }
+        return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const hasErrors = document.querySelectorAll('.errorlist').length > 0;
+        const hasConfirmPasswordErrors = document.querySelector('#confirm-password-container .errorlist') !== null;
+        const hasNonFieldErrors = document.querySelector('form > .error') !== null;
+
+        if (passwordInput.value) {
+            confirmPasswordContainer.classList.add('show');
+            checkPasswordsMatch();
+        } else {
+            confirmPasswordContainer.classList.remove('show');
+
+            if (hasConfirmPasswordErrors) {
+                const errorElements = document.querySelectorAll('#confirm-password-container .errorlist');
+                const formElement = document.querySelector('.form');
+
+                let formLevelErrorContainer = document.getElementById('form-level-errors');
+                if (!formLevelErrorContainer) {
+                    formLevelErrorContainer = document.createElement('div');
+                    formLevelErrorContainer.id = 'form-level-errors';
+                    formElement.insertBefore(formLevelErrorContainer, signupButton);
+                }
+
+                errorElements.forEach(function(errorElement) {
+                    const clonedError = errorElement.cloneNode(true);
+                    clonedError.classList.add('form-level-error');
+                    formLevelErrorContainer.appendChild(clonedError);
+
+                    errorElement.style.display = 'none';
+                });
+            }
+        }
+    });
 
     passwordInput.addEventListener('input', function () {
         if (this.value.length > 0) {
-            confirmPasswordContainer.style.display = 'block';
+            confirmPasswordContainer.classList.add('show');
+            checkPasswordsMatch();
         } else {
-            confirmPasswordContainer.style.display = 'none';
+            confirmPasswordContainer.classList.remove('show');
+            passwordMatchError.style.display = 'none';
+            signupButton.disabled = false;
+            signupButton.classList.remove('button-disabled');
+        }
+    });
+
+    confirmPasswordInput.addEventListener('input', function() {
+        checkPasswordsMatch();
+    });
+
+    document.querySelector('.form').addEventListener('submit', function(event) {
+        if (passwordInput.value && confirmPasswordInput.value) {
+            if (!checkPasswordsMatch()) {
+                event.preventDefault();
+            }
         }
     });
 </script>

@@ -6,93 +6,98 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change account info</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/profile-style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/change-info-style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/change-info-style.css' %}?v=1"/>
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
 </head>
 <body>
 <main class="change-info-page">
-    <div class="burger-menu-container">
-        <a href="{% url 'books' %}">
-            <img src="{% static 'images/menu.png' %}" alt="Readie logo" class="burger-menu"/>
-        </a>
-    </div>
+
     <div class="change-info-content">
         <div class="change-info-card">
+            <button class="close-button" aria-label="Close" onclick="history.back()"></button>
             <form class="change-info-form" method="post" action="{% url 'change_info' %}">
                 {% csrf_token %}
-                <h1 class="profile-name">Change account info</h1>
+                <h1 class="change-info-heading">Change account info</h1>
 
                 <div class="input-field">
                     <label for="id_email" class="label">Email</label>
-                    <input type="email" name="email" id="id_email" class="input" value="{{ user.email }}" placeholder="user@example.com"/>
+                    <input type="email" name="email" id="id_email" class="input" value="{{ user.email }}"
+                           placeholder="user@example.com"/>
                     {% if form.email.errors %}
-                        <div class="errorlist">
-                            {% for error in form.email.errors %}
-                            <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
+                    <div class="errorlist">
+                        {% for error in form.email.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                     {% endif %}
                 </div>
 
                 <div class="input-field">
                     <label for="id_name" class="label">Name</label>
-                    <input type="text" name="name" id="id_name" class="input" value="{{ user.name }}" placeholder="Name"/>
+                    <input type="text" name="name" id="id_name" class="input" value="{{ user.name }}"
+                           placeholder="Name"/>
                     {% if form.name.errors %}
-                        <div class="errorlist">
-                            {% for error in form.name.errors %}
-                            <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
+                    <div class="errorlist">
+                        {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                     {% endif %}
                 </div>
 
                 <div class="input-field">
                     <label for="id_old_password" class="label">Old password</label>
-                    <input type="password" name="old_password" id="id_old_password" class="input" placeholder="Old password"/>
+                    <input type="password" name="old_password" id="id_old_password" class="input"
+                           placeholder="Old password"/>
                     {% if form.old_password.errors %}
-                        <div class="errorlist">
-                            {% for error in form.old_password.errors %}
-                            <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
+                    <div class="errorlist">
+                        {% for error in form.old_password.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                     {% endif %}
                 </div>
 
                 <div class="input-field">
                     <label for="id_new_password" class="label">New password</label>
-                    <input type="password" name="new_password" id="id_new_password" class="input" placeholder="New password"/>
+                    <input type="password" name="new_password" id="id_new_password" class="input"
+                           placeholder="New password"/>
                     {% if form.new_password.errors %}
-                        <div class="errorlist">
-                            {% for error in form.new_password.errors %}
-                            <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <div class="input-field">
-                    <label for="id_confirm_new_password" class="label">Confirm new password</label>
-                    <input type="password" name="confirm_new_password" id="id_confirm_new_password" class="input" placeholder="Confirm new password"/>
-                    {% if form.confirm_new_password.errors %}
-                        <div class="errorlist">
-                            {% for error in form.confirm_new_password.errors %}
-                            <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-
-                {% if form.non_field_errors %}
-                    <div class="error-message">
-                        {% for error in form.non_field_errors %}
+                    <div class="errorlist">
+                        {% for error in form.new_password.errors %}
                         <p>{{ error }}</p>
                         {% endfor %}
                     </div>
+                    {% endif %}
+                </div>
+
+                <div class="input-field" id="confirm-new-password-container">
+                    <label for="id_confirm_new_password" class="label">Confirm new password</label>
+                    <input type="password" name="confirm_new_password" id="id_confirm_new_password" class="input"
+                           placeholder="Confirm new password" {% if form.data.password %}required{% endif %}/>
+                    {% if form.confirm_new_password.errors %}
+                    <div class="errorlist">
+                        {% for error in form.confirm_new_password.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div id="password-match-error" class="error hidden">
+                    New passwords don't match.
+                </div>
+
+                {% if form.non_field_errors %}
+                <div class="error">
+                    {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
                 {% endif %}
 
-                <div class="button-group">
-                    <button type="submit" class="login-button">Confirm</button>
+                <div class="change-info-buttons">
+                    <button type="submit" class="change-info-button">Confirm</button>
                 </div>
 
             </form>
@@ -102,3 +107,58 @@
 </main>
 </body>
 </html>
+
+<script>
+    const passwordInput = document.getElementById('id_new_password');
+    const confirmPasswordInput = document.getElementById('id_confirm_new_password');
+    const confirmPasswordContainer = document.getElementById('confirm-new-password-container');
+    const passwordMatchError = document.getElementById('password-match-error');
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const submitButton = document.querySelector('.change-info-button');
+        submitButton.classList.remove('disabled');
+    });
+
+    passwordInput.addEventListener('input', function () {
+        const submitButton = document.querySelector('.change-info-button');
+
+        if (this.value.length > 0) {
+            confirmPasswordContainer.classList.add('show');
+        } else {
+            confirmPasswordContainer.classList.remove('show');
+            passwordMatchError.classList.add('hidden');
+            submitButton.classList.remove('disabled');
+        }
+
+        if (this.value.length > 0 && confirmPasswordInput.value.length > 0) {
+            checkPasswordsMatch();
+        } else if (this.value.length === 0) {
+            submitButton.classList.remove('disabled');
+        }
+    });
+
+    confirmPasswordInput.addEventListener('input', function() {
+        const submitButton = document.querySelector('.change-info-button');
+
+        if (passwordInput.value.length > 0 && this.value.length > 0) {
+            checkPasswordsMatch();
+        } else {
+            passwordMatchError.classList.add('hidden');
+            if (passwordInput.value.length === 0) {
+                submitButton.classList.remove('disabled');
+            }
+        }
+    });
+
+    function checkPasswordsMatch() {
+        const submitButton = document.querySelector('.change-info-button');
+
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            passwordMatchError.classList.remove('hidden');
+            submitButton.classList.add('disabled');
+        } else {
+            passwordMatchError.classList.add('hidden');
+            submitButton.classList.remove('disabled');
+        }
+    }
+</script>

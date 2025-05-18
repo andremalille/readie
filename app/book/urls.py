@@ -19,4 +19,5 @@ urlpatterns = [
     ),
     path('edit-book/<int:pk>/', views.edit_book_view, name='edit_book'),
     path('delete-book/<int:pk>/', views.delete_book, name='delete_book'),
+    path('toggle-favourite/<int:pk>/', views.toggle_favourite, name='toggle_favourite'),
 ]
