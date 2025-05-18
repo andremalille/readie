@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% load static %}
     {% load form_tags %}
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How can we address you?</title>
-    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/enter-name-style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/enter-name-style.css' %}" />
     <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
 </head>
 
 <body>
-<div class="enter-name-page">
     <a class="logo">
-        <img src="{% static 'images/logo.png' %}" alt="Readie logo" class="logo-img"/>
+        <img src="{% static 'images/logo.png' %}" alt="Readie logo" class="logo-img" />
     </a>
-
-    <div class="enter-name-container">
+    <div class="container">
 
         <h1>How can we address you?</h1>
         <form class="name-form" method="post">
@@ -26,7 +25,7 @@
 
                 <div class="name-input-field">
                     <label for="id_name" class="hidden">Enter your name</label>
-                    <input id="id_name" name="name" type="text" class="input" placeholder="Enter your name" required/>
+                    <input id="id_name" name="name" type="text" class="input" placeholder="Enter your name" required />
                     {% if form.name.errors %}
                     <div class="errorlist">
                         {% for error in form.name.errors %}
@@ -38,14 +37,18 @@
 
                 <button type="submit" class="start-button">
                     Let's start
-                    <svg class="arrow-right" width="30" height="16" viewBox="0 0 30 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M29.7071 8.70711C30.0976 8.31658 30.0976 7.68342 29.7071 7.29289L23.3431 0.928932C22.9526 0.538408 22.3195 0.538408 21.9289 0.928932C21.5384 1.31946 21.5384 1.95262 21.9289 2.34315L27.5858 8L21.9289 13.6569C21.5384 14.0474 21.5384 14.6805 21.9289 15.0711C22.3195 15.4616 22.9526 15.4616 23.3431 15.0711L29.7071 8.70711ZM0 9H29V7H0V9Z" fill="currentColor"/>
+                    <svg class="arrow-right" width="30" height="16" viewBox="0 0 30 16" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M29.7071 8.70711C30.0976 8.31658 30.0976 7.68342 29.7071 7.29289L23.3431 0.928932C22.9526 0.538408 22.3195 0.538408 21.9289 0.928932C21.5384 1.31946 21.5384 1.95262 21.9289 2.34315L27.5858 8L21.9289 13.6569C21.5384 14.0474 21.5384 14.6805 21.9289 15.0711C22.3195 15.4616 22.9526 15.4616 23.3431 15.0711L29.7071 8.70711ZM0 9H29V7H0V9Z"
+                            fill="currentColor" />
                     </svg>
                 </button>
 
             </div>
         </form>
     </div>
-</div>
+
 </body>
+
 </html>
