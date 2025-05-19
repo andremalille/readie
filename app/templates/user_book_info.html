@@ -17,6 +17,16 @@
 <body>
 <div class="container">
     <div class="left-side">
+        <a href="{% url 'toggle_favourite' book_list.pk %}" class="favourite-link">
+                <button class="star-button {% if book_list.favourites %}active{% endif %}"
+                        title="{% if book_list.favourites %}Remove from favourites{% else %}Add to favourites{% endif %}">
+                    <svg class="star-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path class="star-path"
+                              d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z">
+                        </path>
+                    </svg>
+                </button>
+            </a>
         {% if book.thumbnail %}
         <div class="background-blur" style="background-image: url('{{ book.thumbnail }}');"></div>
         {% else %}
@@ -32,16 +42,7 @@
     </div>
     <div class="right-side">
         <div class="book-info-container">
-            <a href="{% url 'toggle_favourite' book_list.pk %}" class="favourite-link">
-                <button class="star-button {% if book_list.favourites %}active{% endif %}"
-                        title="{% if book_list.favourites %}Remove from favourites{% else %}Add to favourites{% endif %}">
-                    <svg class="star-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="star-path"
-                              d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z">
-                        </path>
-                    </svg>
-                </button>
-            </a>
+            
 
             <header class="user-book-info-header">
                 <h1>{{ book.title }}</h1>
@@ -119,7 +120,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Status</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     {{ form.status }}
@@ -147,7 +147,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Pages</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     {% if book.num_pages %}
@@ -183,7 +182,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     Are you sure you want to remove <strong>"{{ book.title }}"</strong> from your list?

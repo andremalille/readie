@@ -30,7 +30,6 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
 }
 
 .container {
@@ -88,7 +87,6 @@ body {
     padding: 40px 20px;
     min-width: 380px;
     width: 100%;
-    position: relative;
     background-color: var(--color-background);
     overflow-y: auto;
 }
@@ -172,7 +170,6 @@ p {
     max-height: 400px;
     overflow-y: auto;
     padding-right: 8px;
-    position: relative;
     text-align: justify;
     margin-top: 6px;
 }
@@ -219,9 +216,9 @@ p {
 }
 
 .close-button {
-    position: fixed;
-    top: 50px;
-    right: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
     width: 60px;
     height: 60px;
     background: url("../images/cross.svg") no-repeat center;

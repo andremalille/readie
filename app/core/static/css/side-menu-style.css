@@ -1,5 +1,5 @@
 .side-menu {
-    position: fixed;
+    position: absolute;
     top: 30px;
     left: -320px;
     width: 320px;
@@ -7,7 +7,7 @@
     background-color: var(--color-white);
     box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
     transition: all 0.4s ease;
-    z-index: 1000;
+    z-index: 10;
     padding: 0;
     overflow-y: auto;
     display: flex;
@@ -20,14 +20,12 @@
 }
 
 .side-menu-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: absolute;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(3px);
-    z-index: 999;
+    z-index: 5;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
@@ -44,7 +42,6 @@
     border-bottom: 1px solid var(--color-border);
     display: flex;
     align-items: center;
-    position: relative;
 }
 
 .side-menu-user-image {
@@ -97,7 +94,6 @@
     position: absolute;
     top: 16px;
     right: 16px;
-    background: none;
     border: none;
     font-size: 24px;
     cursor: pointer;

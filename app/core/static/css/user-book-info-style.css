@@ -39,6 +39,13 @@
     margin-right: 10px;
 }
 
+.favourite-link{
+    display: block;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+}
+
 .star-button {
     background: none;
     border: none;
@@ -46,10 +53,10 @@
     padding: 0;
     width: 40px;
     height: 40px;
+    top: 20px;
+    left: 20px;
+    z-index: 10000;
     position: absolute;
-    top: 65px;
-    left: 50px;
-    z-index: 10;
 }
 
 .star-icon {
@@ -60,7 +67,7 @@
 
 .star-path {
     fill: transparent;
-    stroke: black;
+    stroke: rgb(255, 255, 255);
     stroke-width: 1.5;
     transition: fill 0.3s ease;
 }
