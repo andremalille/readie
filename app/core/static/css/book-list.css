@@ -414,3 +414,22 @@ input[type='number']:focus,
 .page-link:hover {
     background-color: var(--color-border);
 }
+
+@media (max-width: 700px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .header-right {
+        margin: 0;
+    }
+
+    .header-left {
+        margin: 0;
+        flex-flow: 2;
+    }
+
+
+}
