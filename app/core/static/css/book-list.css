@@ -25,7 +25,7 @@ body {
     line-height: var(--line-height);
     color: var(--color-text);
     width: 100%;
-    height: 100%;
+    height: 100vh;
     margin: 0;
     padding: 0;
 }
@@ -40,10 +40,18 @@ main {
     height: 30px;
 }
 
+.side-menu-overlay {
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: 5;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
 .side-menu-overlay.active {
-    position: absolute;
-    top: 0;
-    left: 0;
     opacity: 1;
     visibility: visible;
 }
