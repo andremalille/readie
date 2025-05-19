@@ -1,0 +1,73 @@
+:root {
+  --color-primary: #2c2c2c;
+  --color-primary-hover: #1e1e1e;
+  --color-text: #1e1e1e;
+  --color-text-light: #b3b3b3;
+  --color-background: #f2f0ef;
+  --color-white: #ffffff;
+  --color-border: #d9d9d9;
+  --color-error: rgb(175, 5, 1);
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --radius: 8px;
+  --radius-pill: 30px;
+  --font-family: "Inter", Helvetica, sans-serif;
+  --font-size: 16px;
+  --line-height: 1.4;
+}
+
+html,
+body {
+  font-family: var(--font-family), sans-serif;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--color-background);
+  padding: 10px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 96px;
+}
+
+p {
+  font-size: 22px;
+}
+
+.close-button {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  border: 2px solid var(--color-primary-hover);
+  color: var(--color-white);
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 80px;
+  }
+}
