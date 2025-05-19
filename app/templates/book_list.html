@@ -1,88 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
 {% load static %}
-<a href="{% url 'logout' %}" class="btn">Logout</a>
-<a href="{% url 'profile' %}" class="btn">Profile</a>
-<link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
 
-<h1>Book Collection</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/book-list.css' %}?v=1" />
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">    
+    <link rel="stylesheet" href="{% static 'css/side-menu-style.css' %}"/>
+    <title>Book Library</title>
+</head>
 
-<div class="book-list">
-    <form method="get">
-        <div>
-            {{ form.q.label }} {{ form.q }}
-            <button type="submit" name="action" value="search">Search</button>
+<body>
+    
+    <header>
+        <!-- Burger Menu -->
+    <div class="burger-menu-container">
+        <button class="burger-menu-btn" id="burgerMenuBtn" aria-label="Open menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 6H21" stroke="#1e1e1e" stroke-width="2" stroke-linecap="round"/>
+                <path d="M3 12H21" stroke="#1e1e1e" stroke-width="2" stroke-linecap="round"/>
+                <path d="M3 18H21" stroke="#1e1e1e" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Бокове меню -->
+    <div class="side-menu" id="sideMenu">
+        <!-- Шапка меню з інформацією користувача -->
+        <div class="side-menu-header">
+            <!-- Фото користувача -->
+            {% if user.image %}
+            <div class="side-menu-user-image">
+                <img src="{{ user.image.url }}" alt="Profile photo">
+            </div>
+            {% else %}
+            <div class="side-menu-user-placeholder">
+                <span>{{ user.name.0|default:"?" }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Інформація користувача -->
+            <div class="side-menu-user-info">
+                <div class="side-menu-username">{{ user.name }}</div>
+                <div class="side-menu-email">{{ user.email }}</div>
+            </div>
+
+            <!-- Кнопка закриття -->
+            <button class="side-menu-close" id="closeMenuBtn" aria-label="Close menu">&times;</button>
         </div>
 
-        <input type="text" id="category-search" placeholder="Filter categories...">
+        <!-- Контент меню -->
+        <div class="side-menu-content">
+            <h2 class="side-menu-title">Navigation</h2>
+            <div class="side-menu-links">
+                <a href="{% url 'home' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Main Page
+                </a>
+                <a href="{% url 'books' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    Book Library
+                </a>
+                <a href="{% url 'user_list' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                        <line x1="9" y1="12" x2="15" y2="12"></line>
+                        <line x1="9" y1="16" x2="15" y2="16"></line>
+                    </svg>
+                    My Reading List
+                </a>
+                <a href="{% url 'profile' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </a>
+                <a href="{% url 'logout' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Log Out
+                </a>
+            </div>
+        </div>
 
-        <div id="category-checkboxes">
-            {% for value, label in form.categories.field.choices %}
-            <div class="category-item">
-                <label>
-                    <input type="checkbox" name="categories" value="{{ value }}"
-                           {% if value in form.categories.value %}checked{% endif %}>
-                    {{ label }}
-                </label>
+        <!-- Футер меню -->
+        <div class="side-menu-footer">
+            Readie &copy; 2025
+        </div>
+    </div>
+    <div class="side-menu-overlay" id="menuOverlay"></div>
+        <div class="header-left">
+            <h1 class="site-title">Book Library</h1>
+        </div>
+        <div class="header-right">
+            <div class="search-container">
+                <form method="get" class="search-form">
+                    <input type="search" class="search-input" name="q" id="search_input_id"
+                        placeholder="Search books..." value="{{ form.q.value|default:'' }}">
+                    <button type="submit" name="action" value="search" class="search-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            <div class="user-actions">
+                <a href="{% url 'profile' %}" class="user-profile-link">
+                    <div class="user-avatar">
+                        {% if user.image %}
+                        <img src="{{ user.image.url }}" alt="Profile photo">
+                        {% else %}
+                        <span>{{ user.name.0|default:"?" }}</span>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="filters">
+            <div class="filter-header">
+                <h2>Filters</h2>
+                <a href="{% url 'books' %}" class="clear-filters">Clear all</a>
+            </div>
+            <form method="get" class="filter-form">
+                <div class="filter-section">
+                    <h3 class="filter-title">Categories</h3>
+                    <div class="category-search">
+                        <input type="text" id="category-search" placeholder="Search categories...">
+                    </div>
+                    <div id="category-checkboxes" class="checkboxes-container">
+                        {% for value, label in form.categories.field.choices %}
+                        <div class="category-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="categories" value="{{ value }}" 
+                                {% if value in                                    form.categories.value %}checked{% endif %}>
+                                <span class="checkbox-text">{{ label }}</span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3 class="filter-title">Pages</h3>
+                    <div class="range-inputs">
+                        <input type="number" name="pages_min" class="number-input" min="0" max="5" step="0.1" 
+                        {% if                            form.pages_min.value %} value="{{ form.pages_min.value }}" {% endif %}
+                            placeholder="{{ form.pages_min.label }}">
+                        <input type="number" name="pages_max" class="number-input" min="0" max="5" step="0.1" 
+                        {% if                            form.pages_max.value %} value="{{ form.pages_max.value }}" {% endif %}
+                            placeholder="{{ form.pages_max.label }}">
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3 class="filter-title">Rating</h3>
+                    <div class="range-inputs">
+                        <input type="number" name="rating_min" class="number-input" min="0" max="5" step="0.1" 
+                        {% if                            form.rating_min.value %} value="{{ form.rating_min.value }}" {% endif %}
+                            placeholder="{{ form.rating_min.label }}">
+                        <input type="number" name="rating_max" class="number-input" min="0" max="5" step="0.1" 
+                        {% if                            form.rating_max.value %} value="{{ form.rating_max.value }}" {% endif %}
+                            placeholder="{{ form.rating_max.label }}">
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3 class="filter-title">Year</h3>
+                    <div class="range-inputs">
+                        <input type="number" name="year_min" class="number-input" min="0" max="5" step="0.1" 
+                        {% if                            form.year_min.value %} value="{{ form.year_min.value }}" {% endif %}
+                            placeholder="{{ form.year_min.label }}">
+                        <input type="number" name="year_max" class="number-input" min="0" max="5" step="0.1" 
+                        {% if                            form.year_max.value %} value="{{ form.year_max.value }}" {% endif %}
+                            placeholder="{{ form.year_max.label }}">
+                    </div>
+                </div>
+
+
+                <div class="filter-actions">
+                    <button type="submit" name="action" value="filter" class="filter-button">Apply Filters</button>
+                    <button type="submit" name="action" value="recommend" class="recommend-button">
+                        Find Recommendations
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="book-cards-container">
+            {% for book in page_obj %}
+            <div class="book-card">
+                <div class="book-cover">
+                    {% if book.thumbnail %}
+                    <img src="{{ book.thumbnail }}" alt="{{ book.title }} cover" class="book-cover-img">
+                    {% else %}
+                    <div class="no-cover">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    {% endif %}
+                    <div class="book-rating">
+                        <span>{{ book.average_rating|floatformat:1 }}</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="gold" stroke="gold" stroke-width="1"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                    </div>
+                </div>
+                <div class="book-info">
+                    <a href="{% url 'book_info' pk=book.pk %}" class="book-title">{{ book.title }}</a>
+                    <p class="book-author">{{ book.authors }}</p>
+                    <p class="book-year">Year: {{ book.published_year }}</p>
+                    <p class="book-isbn">ISBN: {{ book.isbn13 }}</p>
+                </div>
+
             </div>
             {% endfor %}
         </div>
+    </main>
+    <footer class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1{% if query_params %}&{{ query_params }}{% endif %}" class="page-link first">&laquo;
+                first</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}"
+                class="page-link prev">previous</a>
+            {% endif %}
+            <span class="current-page">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}"
+                class="page-link next">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if query_params %}&{{ query_params }}{% endif %}"
+                class="page-link last">last &raquo;</a>
+            {% endif %}
+        </span>
+    </footer>
+    <script>
+        document.getElementById("category-search").addEventListener("input", function () {
+            const filter = this.value.toLowerCase();
+            const items = document.querySelectorAll("#category-checkboxes .category-item");
 
-        <div>
-            <label>{{ form.pages_min.label }}</label> {{ form.pages_min }}
-            <label>{{ form.pages_max.label }}</label> {{ form.pages_max }}
-        </div>
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? "block" : "none";
+            });
+        });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const burgerBtn = document.getElementById('burgerMenuBtn');
+        const closeBtn = document.getElementById('closeMenuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('menuOverlay');
+        const burgerContainer = document.querySelector('.burger-menu-container');
 
-        <div>
-            <label>{{ form.rating_min.label }}</label> {{ form.rating_min }}
-            <label>{{ form.rating_max.label }}</label> {{ form.rating_max }}
-        </div>
+        // Відкрити меню
+        burgerBtn.addEventListener('click', function () {
+            sideMenu.classList.add('active');
+            overlay.classList.add('active');
+            burgerContainer.classList.add('hidden'); // Ховаємо бургер
+            document.body.style.overflow = 'hidden'; // Заблокувати прокрутку основної сторінки
+        });
 
-        <div>
-            <label>{{ form.year_min.label }}</label> {{ form.year_min }}
-            <label>{{ form.year_max.label }}</label> {{ form.year_max }}
-        </div>
+        // Закрити меню
+        function closeMenu() {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            burgerContainer.classList.remove('hidden'); // Показуємо бургер знову
+            document.body.style.overflow = ''; // Відновити прокрутку
+        }
 
-        <button type="submit" name="action" value="filter">Filter</button>
-        <button type="submit" name="action" value="recommend">Recommend</button>
-        <a href="{% url 'books' %}" class="btn">Clear</a>
-    </form>
-    {% for book in page_obj %}
-    <div class="book-card">
-        <a href="{% url 'book_info' pk=book.pk %}"><h2>{{ book.title }}</h2></a>
-        <p><strong>Authors:</strong> {{ book.authors }}</p>
-        <p><strong>Published:</strong> {{ book.published_year }}</p>
-        <p><strong>Rating:</strong> {{ book.average_rating|floatformat:1 }}/5.0</p>
-        <p><strong>ISBN-13:</strong> {{ book.isbn13 }}</p>
-    </div>
-    {% endfor %}
-</div>
+        closeBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', closeMenu);
 
-<div class="pagination">
-  <span class="step-links">
-    {% if page_obj.has_previous %}
-      <a href="?page=1{% if query_params %}&{{ query_params }}{% endif %}">&laquo; first</a>
-      <a href="?page={{ page_obj.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">previous</a>
-    {% endif %}
-
-    <span class="current">
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-    </span>
-
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">next</a>
-      <a href="?page={{ page_obj.paginator.num_pages }}{% if query_params %}&{{ query_params }}{% endif %}">last &raquo;</a>
-    {% endif %}
-  </span>
-</div>
-
-
-<script>
-    document.getElementById("category-search").addEventListener("input", function () {
-        const filter = this.value.toLowerCase();
-        const items = document.querySelectorAll("#category-checkboxes .category-item");
-
-        items.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            item.style.display = text.includes(filter) ? "block" : "none";
+        // Закривати меню після натискання на посилання (опціонально)
+        const menuLinks = document.querySelectorAll('.side-menu-link');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                // Невелика затримка перед закриттям для кращого UX
+                setTimeout(closeMenu, 100);
+            });
         });
     });
 </script>
+</body>
+
+</html>
