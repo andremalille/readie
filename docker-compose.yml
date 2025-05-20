@@ -32,3 +32,7 @@ services:
       - POSTGRES_DB=app_ryti
       - POSTGRES_USER=db
       - POSTGRES_PASSWORD=72behYmzgzR5V7atUoXVZIdujNJsaDjI
+
+volumes:
+  dev-db-data:
+  dev-static-data:
