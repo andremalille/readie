@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'app'),
-        'USER': os.environ.get('DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'supersecret'),
-        'HOST': os.environ.get('DB_HOST', 'db'),
+        'NAME': os.environ.get('DB_NAME', 'app_ryti'),
+        'USER': os.environ.get('DB_USER', 'db'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '72behYmzgzR5V7atUoXVZIdujNJsaDjI'),
+        'HOST': os.environ.get('DB_HOST', 'dpg-d0mf3ouuk2gs73fk5i60-a'),
         'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
