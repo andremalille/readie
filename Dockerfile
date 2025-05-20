@@ -1,7 +1,9 @@
 FROM python:3.9-alpine3.13
 LABEL maintainer="Andre"
 
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
+ENV VIRTUAL_ENV=/py
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 WORKDIR /app
 
@@ -12,31 +14,28 @@ COPY ./entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
-
-EXPOSE 8000
-
 ARG DEV=false
-RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache postgresql-client jpeg-dev && \
+RUN python -m venv $VIRTUAL_ENV && \
+    pip install --upgrade pip && \
+    apk add --update --no-cache \
+        postgresql-client jpeg-dev zlib zlib-dev \
+        libffi-dev openssl-dev libc6-compat && \
     apk add --update --no-cache --virtual .tmp-build-deps \
-        build-base postgresql-dev musl-dev zlib zlib-dev && \
-    /py/bin/pip install -r /tmp/requirements.txt && \
-    if [ $DEV = "true" ]; \
-        then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
+        build-base postgresql-dev musl-dev && \
+    pip install -r /tmp/requirements.txt && \
+    if [ "$DEV" = "true" ]; then \
+        pip install -r /tmp/requirements.dev.txt ; \
     fi && \
     rm -rf /tmp && \
     apk del .tmp-build-deps && \
     adduser \
         --disabled-password \
         --no-create-home \
-        django-user &&\
-    mkdir -p /vol/web/media && \
-    mkdir -p /vol/web/static && \
+        django-user && \
+    mkdir -p /vol/web/media /vol/web/static && \
     chown -R django-user:django-user /vol && \
     chmod -R 755 /vol
 
-ENV PATH="/py/bin:$PATH"
-
+EXPOSE 8000
+ENTRYPOINT ["/entrypoint.sh"]
 USER django-user
