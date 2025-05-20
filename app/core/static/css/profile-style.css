@@ -165,6 +165,7 @@ a:hover {
     left: 50px;
     width: 100px;
     height: 100px;
+    z-index: 100;
 }
 
 .burger-menu {

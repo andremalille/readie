@@ -1,0 +1,26 @@
+
+.filter-header{
+justify-content: flex-end;
+}
+
+.checkboxes-container {
+    max-height: fit-content;
+}
+
+.checkbox-item {
+    margin-bottom: var(--space-sm);
+}
+
+.checkbox-item label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox-item label input {
+    margin-right: var(--space-sm);
+}
+
+.checkbox-text {
+    font-size: 14px;
+}

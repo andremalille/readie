@@ -7,7 +7,7 @@
     background-color: var(--color-white);
     box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
     transition: all 0.4s ease;
-    z-index: 10;
+    z-index: 30;
     padding: 0;
     overflow-y: auto;
     display: flex;
@@ -25,7 +25,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(3px);
-    z-index: 5;
+    z-index: 25;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
@@ -178,7 +178,7 @@
 }
 
 /* Стилі для кнопки бургер-меню */
-.burger-menu-btn {
+.burger-menu-btn, .filter-toggle-btn{
     border: none;
     cursor: pointer;
     padding: 8px;
@@ -191,14 +191,21 @@
     justify-content: center;
     align-items: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 7;
 }
 
-.burger-menu-btn:hover {
+.filter-toggle-btn{
+    position: absolute;
+    top: 15px;
+    left: 25px;
+}
+
+.burger-menu-btn:hover, .filter-toggle-btn {
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.burger-menu-btn svg {
+.burger-menu-btn svg, .filter-toggle-btn svg {
     width: 24px;
     height: 24px;
 }

@@ -1,0 +1,168 @@
+:root {
+    --color-primary: #2c2c2c;
+    --color-primary-hover: #1e1e1e;
+    --color-text: #1e1e1e;
+    --color-text-light: #b3b3b3;
+    --color-background: #f2f0ef;
+    --color-white: #ffffff;
+    --color-border: #d9d9d9;
+    --color-error: rgb(175, 5, 1);
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --radius: 8px;
+    --radius-pill: 30px;
+    --font-family: "Inter", Helvetica, sans-serif;
+    --font-size: 16px;
+    --line-height: 1.4;
+}
+
+html,
+body {
+    font-family: var(--font-family), sans-serif;
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    color: var(--color-text);
+    background: var(--color-background);
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    gap: 20px;
+    padding: var(--space-lg) var(--space-xl);
+    background-color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    z-index: 5;
+    padding: 15px 30px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-left: auto;
+}
+
+.logo img {
+    height: 35px;
+}
+
+.signin-button,
+.signup-button {
+    max-width: 150px;
+    padding: 10px;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    text-align: center;
+}
+
+.signin-button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.signin-button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.signup-button {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.signup-button:hover {
+    background-color: var(--color-border);
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 24px;
+    text-align: center;
+    background-image: url("../images/books_blurry.png");
+    background-size: cover;
+    background-position: center;
+    color: var(--color-white);
+}
+
+.main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(223, 201, 176, 0.4);
+    z-index: 1;
+    pointer-events: none;
+}
+
+h1 {
+    white-space: nowrap;
+    text-transform: capitalize;
+    font-weight: 600;
+    font-size: 55px;
+    text-align: center;
+    margin-top: 30px ;
+}
+
+h3 {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 450;
+    margin-bottom: var(--space-md);
+}
+
+p {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.features {
+    text-align: left;
+    margin-top: 40px;
+}
+
+.features ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px){
+    h1{
+        font-size: 40px;
+    }
+}
+
+@media (max-width: 380px){
+    h1{
+        font-size: 35px;
+    }
+}
