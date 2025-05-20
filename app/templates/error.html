@@ -2,16 +2,16 @@
 <html lang="uk">
 
 <head>
+    {% load static %}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'css/reset.css' %}" />
     <link rel="stylesheet" href="{% static 'css/error.css' %}" />
-    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
-    <title>Помилка {{ code }}</title>
+    <title>Error {{ code }}</title>
 </head>
 <body>
     <h1>{{ code }}</h1>
     <p>{{ message }}</p>
-    <button class="close-button" onclick="history.back()">Назад</button>
+    <button class="close-button" onclick="history.back()">Back</button>
 </body>
 </html>
