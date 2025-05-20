@@ -142,12 +142,12 @@ header {
     top: 0;
     bottom: 0;
     flex: 0 0 350px;
-    background-color: var(--color-background);/**/
-    border-right: 10px solid var(--color-white);
+    background-color: var(--color-background);
     overflow-y: auto;
     height: 100vh;
     padding: 15px;
     z-index: 1000;
+    transition: 0.5s ease-in-out;
 }
 
 .filter-header {
