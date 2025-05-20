@@ -14,11 +14,8 @@
 </head>
 
 <body>
-    <!-- Бокове меню -->
     <div class="side-menu" id="sideMenu">
-        <!-- Шапка меню з інформацією користувача -->
         <div class="side-menu-header">
-            <!-- Фото користувача -->
             {% if user.image %}
             <div class="side-menu-user-image">
                 <img src="{{ user.image.url }}" alt="Profile photo">
@@ -29,17 +26,14 @@
             </div>
             {% endif %}
 
-            <!-- Інформація користувача -->
             <div class="side-menu-user-info">
                 <div class="side-menu-username">{{ user.name }}</div>
                 <div class="side-menu-email">{{ user.email }}</div>
             </div>
 
-            <!-- Кнопка закриття -->
             <button class="side-menu-close" id="closeMenuBtn" aria-label="Close menu">&times;</button>
         </div>
 
-        <!-- Контент меню -->
         <div class="side-menu-content">
             <h2 class="side-menu-title">Navigation</h2>
             <div class="side-menu-links">
@@ -89,7 +83,6 @@
             </div>
         </div>
 
-        <!-- Футер меню -->
         <div class="side-menu-footer">
             Readie &copy; 2025
         </div>
@@ -124,7 +117,6 @@
     </div>
     <div class="side-menu-overlay" id="menuOverlay"></div>
     <header>
-        <!-- Burger Menu -->
         <div class="burger-menu-container">
             <button class="burger-menu-btn" id="burgerMenuBtn" aria-label="Open menu">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -177,10 +169,11 @@
         </button>
         <div class="book-cards-container">
             {% for book in page_obj %}
+            <a href="{% url 'user_book_info' pk=book.pk %}" class="book-card-link">
             <div class="book-card">
                 <div class="book-cover">
-                    {% if book.thumbnail %}
-                    <img src="{{ book.thumbnail }}" alt="{{ book.title }} cover" class="book-cover-img">
+                    {% if book.book.thumbnail %}
+                    <img src="{{ book.book.thumbnail }}" alt="{{ book.book }} cover" class="book-cover-img">
                     {% else %}
                     <div class="no-cover">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -191,15 +184,14 @@
                     </div>
                     {% endif %}
                 </div>
-                <a href="{% url 'user_book_info' pk=book.pk %}">
                     <h2 class="book-title">{{ book.book }}</h2>
-                </a>
                 <div class="book-info">
                     <p class="book-year">Status: {{ book.get_status_display }}</p>
-                    <p class="book-year">Pages: {{ book_list.pages_read }} of {{ book.num_pages }}</p>
+                    <p class="book-year">Pages: {{ book.pages_read }} of {{ book.book.num_pages }}</p>
                 </div>
 
             </div>
+            </a>
             {% endfor %}
         </div>
     </main>
