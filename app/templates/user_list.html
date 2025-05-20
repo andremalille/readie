@@ -14,6 +14,114 @@
 </head>
 
 <body>
+    <!-- Бокове меню -->
+    <div class="side-menu" id="sideMenu">
+        <!-- Шапка меню з інформацією користувача -->
+        <div class="side-menu-header">
+            <!-- Фото користувача -->
+            {% if user.image %}
+            <div class="side-menu-user-image">
+                <img src="{{ user.image.url }}" alt="Profile photo">
+            </div>
+            {% else %}
+            <div class="side-menu-user-placeholder">
+                <span>{{ user.name.0|default:"?" }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Інформація користувача -->
+            <div class="side-menu-user-info">
+                <div class="side-menu-username">{{ user.name }}</div>
+                <div class="side-menu-email">{{ user.email }}</div>
+            </div>
+
+            <!-- Кнопка закриття -->
+            <button class="side-menu-close" id="closeMenuBtn" aria-label="Close menu">&times;</button>
+        </div>
+
+        <!-- Контент меню -->
+        <div class="side-menu-content">
+            <h2 class="side-menu-title">Navigation</h2>
+            <div class="side-menu-links">
+                <a href="{% url 'home' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Main Page
+                </a>
+                <a href="{% url 'books' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    Book Library
+                </a>
+                <a href="{% url 'user_list' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                        <line x1="9" y1="12" x2="15" y2="12"></line>
+                        <line x1="9" y1="16" x2="15" y2="16"></line>
+                    </svg>
+                    My Reading List
+                </a>
+                <a href="{% url 'profile' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </a>
+                <a href="{% url 'logout' %}" class="side-menu-link">
+                    <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Log Out
+                </a>
+            </div>
+        </div>
+
+        <!-- Футер меню -->
+        <div class="side-menu-footer">
+            Readie &copy; 2025
+        </div>
+    </div>
+
+
+    <div class="filters" id="filters">
+        <div class="filter-header">
+            <a href="{% url 'user_list' %}" class="clear-filters">Clear all</a>
+        </div>
+        <form method="get" class="filter-form">
+
+            <fieldset>
+                <legend class="filter-title">Filter by List</legend>
+                <div id="category-checkboxes" class="checkboxes-container">
+                    {% for checkbox in form.statuses %}
+                    <div class="checkbox-item">
+                        <label>
+                            {{ checkbox.tag }}
+                            {{ checkbox.choice_label }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </fieldset>
+            <div class="filter-actions">
+                <button type="submit" name="action" value="filter" class="filter-button">Apply</button>
+                <button type="submit" name="action" value="favourites" class="recommend-button">Show
+                    Favourites</button>
+            </div>
+        </form>
+    </div>
     <div class="side-menu-overlay" id="menuOverlay"></div>
     <header>
         <!-- Burger Menu -->
@@ -25,87 +133,6 @@
                     <path d="M3 18H21" stroke="#1e1e1e" stroke-width="2" stroke-linecap="round" />
                 </svg>
             </button>
-        </div>
-
-        <!-- Бокове меню -->
-        <div class="side-menu" id="sideMenu">
-            <!-- Шапка меню з інформацією користувача -->
-            <div class="side-menu-header">
-                <!-- Фото користувача -->
-                {% if user.image %}
-                <div class="side-menu-user-image">
-                    <img src="{{ user.image.url }}" alt="Profile photo">
-                </div>
-                {% else %}
-                <div class="side-menu-user-placeholder">
-                    <span>{{ user.name.0|default:"?" }}</span>
-                </div>
-                {% endif %}
-
-                <!-- Інформація користувача -->
-                <div class="side-menu-user-info">
-                    <div class="side-menu-username">{{ user.name }}</div>
-                    <div class="side-menu-email">{{ user.email }}</div>
-                </div>
-
-                <!-- Кнопка закриття -->
-                <button class="side-menu-close" id="closeMenuBtn" aria-label="Close menu">&times;</button>
-            </div>
-
-            <!-- Контент меню -->
-            <div class="side-menu-content">
-                <h2 class="side-menu-title">Navigation</h2>
-                <div class="side-menu-links">
-                    <a href="{% url 'home' %}" class="side-menu-link">
-                        <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                        </svg>
-                        Main Page
-                    </a>
-                    <a href="{% url 'books' %}" class="side-menu-link">
-                        <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                        </svg>
-                        Book Library
-                    </a>
-                    <a href="{% url 'user_list' %}" class="side-menu-link">
-                        <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                            <line x1="9" y1="12" x2="15" y2="12"></line>
-                            <line x1="9" y1="16" x2="15" y2="16"></line>
-                        </svg>
-                        My Reading List
-                    </a>
-                    <a href="{% url 'profile' %}" class="side-menu-link">
-                        <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        Profile
-                    </a>
-                    <a href="{% url 'logout' %}" class="side-menu-link">
-                        <svg class="side-menu-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                            <polyline points="16 17 21 12 16 7"></polyline>
-                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                        </svg>
-                        Log Out
-                    </a>
-                </div>
-            </div>
-
-            <!-- Футер меню -->
-            <div class="side-menu-footer">
-                Readie &copy; 2025
-            </div>
         </div>
 
         <div class="header-left">
@@ -140,37 +167,14 @@
     </header>
 
     <main>
-        <div class="filters">
-            <div class="filter-header">
-                <a href="{% url 'user_list' %}" class="clear-filters">Clear all</a>
-            </div>
-            <form method="get" class="filter-form">
-                <div class="category-search">
-                    {{ form.q }}
-                    <button type="submit" name="action" value="search" class="filter-button">Search</button>
-                </div>
+        <button id="filterToggleBtn" class="filter-toggle-btn" aria-label="Toggle filters">
 
-                <fieldset>
-                    <legend class="filter-title">Filter by List</legend>
-                    <div id="category-checkboxes" class="checkboxes-container">
-                        {% for checkbox in form.statuses %}
-                        <div class="checkbox-item">
-                            <label>
-                                {{ checkbox.tag }}
-                                {{ checkbox.choice_label }}
-                            </label>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </fieldset>
-                <div class="filter-actions">
-                    <button type="submit" name="action" value="filter" class="filter-button">Apply</button>
-                    <button type="submit" name="action" value="favourites" class="recommend-button">Show
-                        Favourites</button>
-                </div>
-            </form>
-        </div>
-
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M18 4H6C4.89543 4 3.97434 4.90932 4.24685 5.97975C4.83604 8.29411 6.43423 10.2054 8.54545 11.2177C9.36832 11.6123 10 12.3858 10 13.2984V19.382C10 20.1253 10.7823 20.6088 11.4472 20.2764L13.4472 19.2764C13.786 19.107 14 18.7607 14 18.382V13.2984C14 12.3858 14.6317 11.6123 15.4545 11.2177C17.5658 10.2054 19.164 8.29411 19.7531 5.97975C20.0257 4.90932 19.1046 4 18 4Z"
+                    stroke="#000000" stroke-width="2" />
+            </svg>
+        </button>
         <div class="book-cards-container">
             {% for book in page_obj %}
             <div class="book-card">
@@ -264,6 +268,28 @@
                     setTimeout(closeMenu, 100);
                 });
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('filterToggleBtn');
+            const filters = document.getElementById('filters');
+            const overlay = document.getElementById('menuOverlay');
+
+            function openFilters() {
+                filters.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeFilters() {
+                filters.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            toggleBtn.addEventListener('click', openFilters);
+            overlay.addEventListener('click', closeFilters);
         });
     </script>
 </body>

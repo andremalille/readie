@@ -30,30 +30,14 @@ body {
     padding: 0;
 }
 
-main {
+body{
     display: flex;
+    flex-direction: column;
 }
 
-/* Burger Menu Button */
-.burger-menu-btn {
-    width: 30px;
-    height: 30px;
-}
-
-.side-menu-overlay {
-    width: 100vw;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(3px);
-    z-index: 5;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.side-menu-overlay.active {
-    opacity: 1;
-    visibility: visible;
+main {
+    flex: 1;
+    position: relative;
 }
 
 /* Header Styles */
@@ -152,14 +136,18 @@ header {
 
 /*filter*/
 .filters {
-    position: sticky;
+    width: 360px;
+    position: fixed;
+    left: -360px;
     top: 0;
-    flex: 0 1 350px;
+    bottom: 0;
+    flex: 0 0 350px;
     background-color: var(--color-background);/**/
     border-right: 10px solid var(--color-white);
     overflow-y: auto;
     height: 100vh;
     padding: 15px;
+    z-index: 1000;
 }
 
 .filter-header {
@@ -298,9 +286,25 @@ input[type='number']:focus,
     background-color: var(--color-border);
 }
 
+.filters.active {
+    left: 0;
+}
+
+.filter-toggle-btn {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    top: 80px;
+    left: 20px;
+    z-index: 1000;
+    background: var(--color-border);
+    border: none;
+    cursor: pointer;
+}
 /**filter*/
 .book-cards-container {
-    flex: 1;
+    height: 100%;
+    width: 100%;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
@@ -442,3 +446,4 @@ input[type='number']:focus,
 
 
 }
+
