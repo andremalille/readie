@@ -38,6 +38,10 @@ body{
 main {
     flex: 1;
     position: relative;
+    display: flex;
+    align-items: center;
+    align-items: center;    
+    background: var(--color-background);
 }
 
 /* Header Styles */
@@ -302,15 +306,14 @@ input[type='number']:focus,
     cursor: pointer;
 }
 /**filter*/
+
 .book-cards-container {
-    height: 100%;
     width: 100%;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     gap: 20px;
     padding: 15px;
-    background: var(--color-background);
 }
 
 .book-card {
