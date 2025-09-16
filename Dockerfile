@@ -3,6 +3,7 @@ LABEL maintainer="Andre"
 
 ENV PYTHONUNBUFFERED 1
 
+# Set working dir early
 WORKDIR /app
 
 COPY ./requirements.txt /tmp/requirements.txt
