@@ -21,7 +21,7 @@ This README provides instructions on how to run the project locally.
 
 4. Once the build is complete, open the application in your browser:
    ```bash
-   http://localhost:8000/
+   https://localhost:8000/
 
 5. To stop the containers, press Ctrl + C in the terminal or run:
    ```bash
