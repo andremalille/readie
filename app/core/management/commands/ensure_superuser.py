@@ -19,17 +19,17 @@ class Command(BaseCommand):
         admin_email = os.environ.get('DJANGO_ADMIN_EMAIL', 'admin@example.com')
         admin_password = os.environ.get('DJANGO_ADMIN_PASSWORD', 'adminpassword')
 
-        if User.objects.filter(name=admin_username).exists():
+        if User.objects.filter(username=admin_username).exists():
             self.stdout.write(self.style.SUCCESS(f'Superuser "{admin_username}" already exists'))
             return
 
         required_fields = []
         for field in User._meta.fields:
-            if field.name != 'name' and field.name != 'password' and not field.blank and not field.null:
+            if field.name != 'username' and field.name != 'password' and not field.blank and not field.null:
                 required_fields.append(field.name)
 
         user_kwargs = {
-            'name': admin_username,
+            'username': admin_username,
             'email': admin_email,
         }
 
