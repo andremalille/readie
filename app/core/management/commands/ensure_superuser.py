@@ -41,10 +41,12 @@ class Command(BaseCommand):
 
         user_kwargs = {username_field: admin_identifier}
 
-        if 'name' in available_fields:
-            user_kwargs['name'] = os.environ.get('DJANGO_ADMIN_NAME', 'Admin User')
-
-        fields_to_exclude = ['is_superuser', 'is_staff', 'is_active']
+        for field in User._meta.fields:
+            if field.name not in [username_field, 'password', 'id'] and not field.blank and not field.null:
+                if field.name == 'name':
+                    user_kwargs['name'] = os.environ.get('DJANGO_ADMIN_NAME', 'Admin User')
+                elif field.name not in user_kwargs:
+                    user_kwargs[field.name] = f'default_{field.name}'
 
         self.stdout.write(f"Creating superuser with kwargs: {user_kwargs}")
 
@@ -58,6 +60,7 @@ class Command(BaseCommand):
             ))
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Failed to create superuser: {str(e)}'))
+
             self.stdout.write(self.style.ERROR(f'Exception type: {type(e).__name__}'))
             self.stdout.write(self.style.ERROR(f'Exception args: {e.args}'))
             raise
