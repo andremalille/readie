@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   app:
     build:
@@ -16,8 +14,22 @@ services:
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     environment:
-      - DB_HOST=dpg-d0mf3ouuk2gs73fk5i60-a.oregon-postgres.render.com
-      - DB_NAME=app_ryti
-      - DB_USER=db
-      - DB_PASSWORD=72behYmzgzR5V7atUoXVZIdujNJsaDjI
-      - DB_PORT=5432
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_USER=postgres
+      - DB_PASSWORD=supersecret
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecret
+
+volumes:
+  dev-db-data:
+  dev-static-data:
