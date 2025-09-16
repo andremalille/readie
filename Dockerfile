@@ -1,34 +1,36 @@
 FROM python:3.9-alpine3.13
 LABEL maintainer="Andre"
 
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE=app.settings
 
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 COPY ./app /app
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
 WORKDIR /app
 EXPOSE 8000
 
-ARG DEV="false"
+ARG DEV=false
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --update --no-cache postgresql-client jpeg-dev && \
     apk add --update --no-cache --virtual .tmp-build-deps \
         build-base postgresql-dev musl-dev zlib zlib-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
-    if [ "$DEV" = "true" ]; then \
-        /py/bin/pip install -r /tmp/requirements.dev.txt ; \
+    if [ $DEV = "true" ]; \
+        then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
     fi && \
     rm -rf /tmp && \
     apk del .tmp-build-deps && \
-    adduser --disabled-password --no-create-home django-user && \
+    adduser \
+        --disabled-password \
+        --no-create-home \
+        django-user &&\
     mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol
+    chmod -R 755 /vol && \
+    DJANGO_SETTINGS_MODULE=app.settings /py/bin/python manage.py collectstatic --noinput
 
 ENV PATH="/py/bin:$PATH"
 
