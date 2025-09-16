@@ -26,11 +26,8 @@
         </button>
     </div>
 
-    <!-- Бокове меню -->
     <div class="side-menu" id="sideMenu">
-        <!-- Шапка меню з інформацією користувача -->
         <div class="side-menu-header">
-            <!-- Фото користувача -->
             {% if user.image %}
             <div class="side-menu-user-image">
                 <img src="{{ user.image.url }}" alt="Profile photo">
@@ -41,17 +38,14 @@
             </div>
             {% endif %}
 
-            <!-- Інформація користувача -->
             <div class="side-menu-user-info">
                 <div class="side-menu-username">{{ user.name }}</div>
                 <div class="side-menu-email">{{ user.email }}</div>
             </div>
 
-            <!-- Кнопка закриття -->
             <button class="side-menu-close" id="closeMenuBtn" aria-label="Close menu">&times;</button>
         </div>
 
-        <!-- Контент меню -->
         <div class="side-menu-content">
             <h2 class="side-menu-title">Navigation</h2>
             <div class="side-menu-links">
@@ -101,7 +95,6 @@
             </div>
         </div>
 
-        <!-- Футер меню -->
         <div class="side-menu-footer">
             Readie &copy; 2025
         </div>
@@ -137,7 +130,6 @@
     </div>
 </main>
 
-<!-- Модальне вікно для зміни фото -->
 <div class="modal fade" id="changeImageModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <form method="post" enctype="multipart/form-data" action="{% url 'change_profile_image' %}">
@@ -170,30 +162,26 @@
         const overlay = document.getElementById('menuOverlay');
         const burgerContainer = document.querySelector('.burger-menu-container');
 
-        // Відкрити меню
         burgerBtn.addEventListener('click', function () {
             sideMenu.classList.add('active');
             overlay.classList.add('active');
-            burgerContainer.classList.add('hidden'); // Ховаємо бургер
-            document.body.style.overflow = 'hidden'; // Заблокувати прокрутку основної сторінки
+            burgerContainer.classList.add('hidden');
+            document.body.style.overflow = 'hidden';
         });
 
-        // Закрити меню
         function closeMenu() {
             sideMenu.classList.remove('active');
             overlay.classList.remove('active');
-            burgerContainer.classList.remove('hidden'); // Показуємо бургер знову
-            document.body.style.overflow = ''; // Відновити прокрутку
+            burgerContainer.classList.remove('hidden');
+            document.body.style.overflow = '';
         }
 
         closeBtn.addEventListener('click', closeMenu);
         overlay.addEventListener('click', closeMenu);
 
-        // Закривати меню після натискання на посилання (опціонально)
         const menuLinks = document.querySelectorAll('.side-menu-link');
         menuLinks.forEach(link => {
             link.addEventListener('click', function () {
-                // Невелика затримка перед закриттям для кращого UX
                 setTimeout(closeMenu, 100);
             });
         });
