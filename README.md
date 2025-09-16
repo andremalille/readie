@@ -16,10 +16,13 @@ This README provides instructions on how to run the project locally.
    cd readie
    
 2. Build and start the containers:
-docker-compose up --build
+   ```bash
+   docker-compose up --build
 
-3. Once the build is complete, open the application in your browser:
-http://localhost:8000/
+4. Once the build is complete, open the application in your browser:
+   ```bash
+   http://localhost:8000/
 
-4. To stop the containers, press Ctrl + C in the terminal or run:
-docker-compose down
+5. To stop the containers, press Ctrl + C in the terminal or run:
+   ```bash
+   docker-compose down
