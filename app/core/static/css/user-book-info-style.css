@@ -46,7 +46,7 @@
     position: absolute;
 }
 
-.star-button {
+.heart-button {
     background: none;
     border: none;
     cursor: pointer;
@@ -59,25 +59,25 @@
     position: absolute;
 }
 
-.star-icon {
+.heart-icon {
     width: 40px;
     height: 40px;
     transition: transform 0.2s ease;
 }
 
-.star-path {
+.heart-path {
     fill: transparent;
     stroke: rgb(255, 255, 255);
     stroke-width: 1.5;
     transition: fill 0.3s ease;
 }
 
-.star-button.active .star-path {
+.heart-button.active .heart-path {
     fill: #ffc107;
     stroke: #ffc107;
 }
 
-.star-button:hover .star-icon {
+.heart-button:hover .heart-icon {
     transform: scale(1.15);
 }
 
@@ -140,7 +140,7 @@
 }
 
 @media (max-width: 768px) {
-    .star-button {
+    .heart-button {
         top: 20px;
         left: 10px;
     }
