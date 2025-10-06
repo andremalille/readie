@@ -91,7 +91,12 @@ h1 {
 .name-input-group {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 20px;
+}
+
+.name-input-field{
+    flex: 1;
 }
 
 .name-input-field .input {

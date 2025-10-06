@@ -178,8 +178,7 @@
                         <div class="form-group">
                             <label for="id_pages_read">Pages read:</label>
                             <input type="number" name="pages_read" id="id_pages_read" class="form-control"
-                                value="{{ book_list.pages_read }}" min="0" {% if book.num_pages
-                                %}max="{{ book.num_pages }}" {% endif %}>
+                                value="{{ book_list.pages_read }}" min="0" {% if book.num_pages %}max="{{ book.num_pages }}" {% endif %}>
                         </div>
 
                         {% if form.pages_read.errors %}

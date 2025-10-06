@@ -44,7 +44,7 @@ main {
     background: var(--color-background);
 }
 
-/* Header Styles */
+
 header {
     display: flex;
     gap: 20px;
@@ -361,6 +361,7 @@ input[type='number']:focus,
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .book-card img {

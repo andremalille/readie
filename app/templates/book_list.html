@@ -103,8 +103,7 @@
                     {% for value, label in form.categories.field.choices %}
                     <div class="category-item">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="categories" value="{{ value }}" {% if value in
-                                form.categories.value %}checked{% endif %}>
+                            <input type="checkbox" name="categories" value="{{ value }}" {% if value in form.categories.value %}checked{% endif %}>
                             <span class="checkbox-text">{{ label }}</span>
                         </label>
                     </div>
@@ -115,11 +114,9 @@
             <div class="filter-section">
                 <h3 class="filter-title">Pages</h3>
                 <div class="range-inputs">
-                    <input type="number" name="pages_min" class="number-input" min="0" max="5" step="0.1" {% if
-                        form.pages_min.value %} value="{{ form.pages_min.value }}" {% endif %}
+                    <input type="number" name="pages_min" class="number-input" min="0" max="5" step="0.1" {% if form.pages_min.value %} value="{{ form.pages_min.value }}" {% endif %}
                         placeholder="{{ form.pages_min.label }}">
-                    <input type="number" name="pages_max" class="number-input" min="0" max="5" step="0.1" {% if
-                        form.pages_max.value %} value="{{ form.pages_max.value }}" {% endif %}
+                    <input type="number" name="pages_max" class="number-input" min="0" max="5" step="0.1" {% if form.pages_max.value %} value="{{ form.pages_max.value }}" {% endif %}
                         placeholder="{{ form.pages_max.label }}">
                 </div>
             </div>
@@ -127,11 +124,9 @@
             <div class="filter-section">
                 <h3 class="filter-title">Rating</h3>
                 <div class="range-inputs">
-                    <input type="number" name="rating_min" class="number-input" min="0" max="5" step="0.1" {% if
-                        form.rating_min.value %} value="{{ form.rating_min.value }}" {% endif %}
+                    <input type="number" name="rating_min" class="number-input" min="0" max="5" step="0.1" {% if form.rating_min.value %} value="{{ form.rating_min.value }}" {% endif %}
                         placeholder="{{ form.rating_min.label }}">
-                    <input type="number" name="rating_max" class="number-input" min="0" max="5" step="0.1" {% if
-                        form.rating_max.value %} value="{{ form.rating_max.value }}" {% endif %}
+                    <input type="number" name="rating_max" class="number-input" min="0" max="5" step="0.1" {% if form.rating_max.value %} value="{{ form.rating_max.value }}" {% endif %}
                         placeholder="{{ form.rating_max.label }}">
                 </div>
             </div>
@@ -139,11 +134,9 @@
             <div class="filter-section">
                 <h3 class="filter-title">Year</h3>
                 <div class="range-inputs">
-                    <input type="number" name="year_min" class="number-input" min="0" max="5" step="0.1" {% if
-                        form.year_min.value %} value="{{ form.year_min.value }}" {% endif %}
+                    <input type="number" name="year_min" class="number-input" min="0" max="5" step="0.1" {% if form.year_min.value %} value="{{ form.year_min.value }}" {% endif %}
                         placeholder="{{ form.year_min.label }}">
-                    <input type="number" name="year_max" class="number-input" min="0" max="5" step="0.1" {% if
-                        form.year_max.value %} value="{{ form.year_max.value }}" {% endif %}
+                    <input type="number" name="year_max" class="number-input" min="0" max="5" step="0.1" {% if form.year_max.value %} value="{{ form.year_max.value }}" {% endif %}
                         placeholder="{{ form.year_max.label }}">
                 </div>
             </div>
