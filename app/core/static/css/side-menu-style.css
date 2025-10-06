@@ -177,7 +177,6 @@
     color: var(--color-text-light);
 }
 
-/* Стилі для кнопки бургер-меню */
 .burger-menu-btn, .filter-toggle-btn{
     border: none;
     cursor: pointer;

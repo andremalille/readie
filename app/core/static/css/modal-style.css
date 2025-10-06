@@ -3,7 +3,7 @@
     border-radius: var(--radius-pill);
     border: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: calc(100%-20px);
+    max-width: calc(100% - 20px);
 }
 
 .modal-header {
@@ -96,7 +96,6 @@
     padding: 5px;
 }
 
-/* Стилізація чекбокса */
 .modal-body input[type="checkbox"] {
     appearance: none !important;
     -webkit-appearance: none !important;

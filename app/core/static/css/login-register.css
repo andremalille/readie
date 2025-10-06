@@ -20,7 +20,6 @@
     --line-height: 1.4;
 }
 
-/* Base Styles */
 html,
 body {
     font-family: var(--font-family);
